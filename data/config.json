@@ -1,0 +1,17 @@
+{
+  "threshold": 10000,
+  "mfys": [
+    "Xovosobod",
+    "Yettiguzar",
+    "Karvonsaroy",
+    "Bunyodkor",
+    "Boshqa MFY"
+  ],
+  "adminChatIds": [
+    "2060481412",
+    2060481412
+  ],
+  "adminBotToken": "8816434488:AAHnsPRhLZ7CBj3nAjIYQOonasYkoufeKMc",
+  "citizenBotToken": "8785609589:AAGWKjOYS0qer09xGSEH0kjxMfAJnYpx_sY",
+  "webAppUrl": "http://localhost:5173"
+}

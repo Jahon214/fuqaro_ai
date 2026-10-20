@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-raised: #f1f5f9;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --accent: #059669;
+  --accent-light: #10b981;
+  --accent-ink: #ffffff;
+  --soft: #ecfdf5;
+  --ok: #16a34a;
+  --ok-bg: #f0fdf4;
+  --warn: #d97706;
+  --warn-bg: #fffbeb;
+  --crit: #dc2626;
+  --crit-bg: #fef2f2;
+  --font-body: "Onest", system-ui, -apple-system, sans-serif;
+  --font-display: "Literata", Georgia, serif;
+}
+
+.dark,
+:root[data-theme="dark"] {
+  --bg: #090d0b;
+  --surface: #101713;
+  --surface-raised: #18221c;
+  --ink: #f1f5f9;
+  --muted: #94a3b8;
+  --line: #1e2d24;
+  --accent: #10b981;
+  --accent-light: #34d399;
+  --accent-ink: #042f21;
+  --soft: #064e3b33;
+  --ok: #4ade80;
+  --ok-bg: #052e1644;
+  --warn: #fbbf24;
+  --warn-bg: #451a0344;
+  --crit: #f87171;
+  --crit-bg: #450a0a44;
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.04) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(14, 165, 233, 0.03) 0px, transparent 50%);
+  background-attachment: fixed;
+}
+
+.dark body {
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 60%),
+    radial-gradient(at 0% 100%, rgba(6, 78, 59, 0.12) 0px, transparent 60%);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+}
+
+/* Glassmorphism panel helper */
+.glass-panel {
+  background: rgba(var(--surface), 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}

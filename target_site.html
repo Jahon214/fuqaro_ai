@@ -1,0 +1,590 @@
+<!doctype html><html><head><meta charset=utf8>
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=67d04c49-0522-419b-9b9c-fd03321fc444
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. --><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Fuqaro AI</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,700&display=swap">
+<style>
+/* Layout: ish stoli. Yuqorida sarlavha va bo'limlar, pastda qabul shakli (chap) va sozlamalar (o'ng). */
+:root{
+  --bg:#f2f5f1; --surface:#ffffff; --ink:#16231c; --muted:#58695f; --line:#d8e0da;
+  --accent:#0e6b4e; --accent-ink:#ffffff; --soft:#e2f1ea;
+  --ok:#17733b; --warn:#9a5b00; --crit:#b3261e; --warn-bg:#fbefd9; --crit-bg:#fbe5e3; --ok-bg:#dff2e5;
+  --font-body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-display:"Literata",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1713; --surface:#16211b; --ink:#e5eee8; --muted:#9bafa4; --line:#26362d;
+    --accent:#4cc59a; --accent-ink:#06271b; --soft:#1a2f26;
+    --ok:#6fd392; --warn:#f0b35a; --crit:#ff8e86; --warn-bg:#33270f; --crit-bg:#3a1a18; --ok-bg:#16301f;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1713; --surface:#16211b; --ink:#e5eee8; --muted:#9bafa4; --line:#26362d;
+  --accent:#4cc59a; --accent-ink:#06271b; --soft:#1a2f26;
+  --ok:#6fd392; --warn:#f0b35a; --crit:#ff8e86; --warn-bg:#33270f; --crit-bg:#3a1a18; --ok-bg:#16301f;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.5;
+  padding-block:0 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--font-display);margin:0;text-wrap:balance;line-height:1.2}
+h2{font-size:22px} h3{font-size:17px}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding-block:20px 12px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.mark{width:38px;height:38px;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:19px;flex:none}
+.brand h1{font-size:24px}
+.brand small{display:block;color:var(--muted);font-size:13px}
+.pills{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px}
+.pill{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 11px;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.pill.test{background:var(--warn-bg);color:var(--warn);border-color:transparent;font-weight:600}
+
+nav{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto;margin-bottom:20px}
+nav button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;cursor:pointer;color:var(--muted);font-weight:600;white-space:nowrap}
+nav button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;min-width:0}
+.card+.card{margin-top:16px}
+.card h3{margin-bottom:4px}
+.hint{color:var(--muted);font-size:13px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font-family:var(--font-display);font-weight:700;font-size:16px;padding:0;margin-bottom:10px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f.wide{grid-column:1/-1}
+label,.lbl{font-size:13px;font-weight:600}
+input,select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:70px}
+.sec{display:flex;flex-direction:column;gap:22px}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:500;font-size:14px}
+.check input{width:auto;margin-top:4px}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:10px 18px;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn.small{padding:6px 12px;font-size:13px}
+.btn.danger{background:var(--crit);color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.err{color:var(--crit);font-size:13px;min-height:18px}
+.note{background:var(--soft);border-radius:8px;padding:10px 12px;font-size:13px}
+
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.sum div{background:var(--bg);border-radius:8px;padding:10px 12px}
+.sum b{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.meter{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--accent)}
+
+.rec{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surface);min-width:0}
+.rec+.rec{margin-top:12px}
+.rec.dec-ok{border-color:var(--ok)} .rec.dec-no{border-color:var(--crit)} .rec.dec-edit{border-color:var(--warn)}
+.rec-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:flex-start;justify-content:space-between}
+.tag{font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.tag.p3{background:var(--crit-bg);color:var(--crit)} .tag.p2{background:var(--warn-bg);color:var(--warn)} .tag.p1{background:var(--soft);color:var(--accent)}
+.rec ul{margin:6px 0 0;padding-left:18px}
+.rec dl{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 12px;margin:12px 0 0;font-size:14px}
+.rec dt{color:var(--muted)} .rec dd{margin:0}
+.rec .lbl{margin-top:12px;display:block}
+.verify{font-size:12px;color:var(--warn);margin-top:10px}
+.decide{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.decide button{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:6px 12px;cursor:pointer;font-weight:600;font-size:13px}
+.decide button[aria-pressed="true"].ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+.decide button[aria-pressed="true"].no{background:var(--crit-bg);color:var(--crit);border-color:var(--crit)}
+.decide button[aria-pressed="true"].edit{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.decide select{width:auto;max-width:100%}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat b{font-family:var(--font-display);font-size:28px;display:block;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:13px}
+.bars{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.bar{display:grid;grid-template-columns:150px minmax(0,1fr) 36px;gap:10px;align-items:center;font-size:13px}
+.bar i{display:block;height:12px;background:var(--accent);border-radius:3px;min-width:2px}
+.bar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:520px){.bar{grid-template-columns:100px minmax(0,1fr) 28px}}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:12.5px}
+td.wrapc{white-space:normal;min-width:180px}
+.ex{color:var(--muted);font-size:12px}
+.low{color:var(--warn);font-size:12px}
+textarea.out{font-family:ui-monospace,Menlo,monospace;font-size:12px;min-height:120px}
+.empty{text-align:center;color:var(--muted);padding:28px 12px}
+@media (prefers-reduced-motion:no-preference){.meter i{transition:width .4s}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="mark" aria-hidden="true">F</div>
+      <div><h1>Fuqaro AI</h1><small>MFY xodimi uchun tavsiya yordamchisi</small></div>
+    </div>
+    <div class="pills">
+      <span class="pill test">Test rejimi</span>
+      <span class="pill">Xovos tumani</span>
+      <span class="pill">Tashqi tizimlarga ulanmagan</span>
+    </div>
+  </header>
+
+  <nav role="tablist" aria-label="Bo'limlar">
+    <button role="tab" id="tab-intake" aria-selected="true" data-view="intake">Yangi qabul</button>
+    <button role="tab" id="tab-result" aria-selected="false" data-view="result">Tavsiyalar</button>
+    <button role="tab" id="tab-log" aria-selected="false" data-view="log">Jurnal va tahlil</button>
+  </nav>
+
+  <!-- QABUL -->
+  <section id="view-intake" class="grid">
+    <form id="form" class="card sec" novalidate>
+      <div>
+        <h2>Fuqaro qabuli</h2>
+        <p class="hint">Xatlov yoki sayyor qabulda so'ralganini kiriting. Bo'sh qoldirilgan maydon tavsiya ishonchliligini pasaytiradi.</p>
+      </div>
+      <fieldset>
+        <legend>Fuqaro</legend>
+        <div class="fields">
+          <div class="f wide"><label for="name">Ism va familiya</label><input id="name" name="name" autocomplete="off" placeholder="Masalan: Aziza Karimova"></div>
+          <div class="f"><label for="age">Yoshi</label><input id="age" name="age" type="number" min="0" max="110" inputmode="numeric"></div>
+          <div class="f"><label for="gender">Jinsi (faqat tahlil uchun, tavsiyaga ta'sir qilmaydi)</label>
+            <select id="gender" name="gender"><option value="">Ko'rsatilmagan</option><option>Ayol</option><option>Erkak</option></select></div>
+          <div class="f"><label for="mfy">MFY</label>
+            <select id="mfy" name="mfy"><option value="">Tanlang</option></select></div>
+          <div class="f"><label for="type">Murojaat turi</label>
+            <select id="type" name="type"><option value="">Tanlang</option></select></div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Oila va daromad</legend>
+        <div class="fields">
+          <div class="f"><label for="members">Oila a'zolari soni</label><input id="members" name="members" type="number" min="1" max="30" inputmode="numeric"></div>
+          <div class="f"><label for="children">Shundan 18 yoshgacha bolalar</label><input id="children" name="children" type="number" min="0" max="20" inputmode="numeric"></div>
+          <div class="f"><label for="income">Oilaning oylik umumiy daromadi (so'm)</label><input id="income" name="income" type="number" min="0" step="50000" inputmode="numeric"></div>
+          <div class="f"><label for="housing">Uy-joy holati</label>
+            <select id="housing" name="housing"><option value="">Ko'rsatilmagan</option><option value="own">O'z uyi, qoniqarli</option><option value="bad">O'z uyi, yomon sharoit</option><option value="rent">Ijarada</option><option value="none">Uy-joyi yo'q</option></select></div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Bandlik, ta'lim, sog'liq</legend>
+        <div class="fields">
+          <div class="f"><label for="work">Bandlik</label>
+            <select id="work" name="work"><option value="">Ko'rsatilmagan</option><option value="jobless">Ishsiz</option><option value="employed">Ishlaydi</option><option value="self">O'zini o'zi band qilgan</option><option value="student">Talaba / o'quvchi</option><option value="home">Uy bekasi</option><option value="retired">Pensioner</option></select></div>
+          <div class="f"><label for="edu">Ta'limi</label>
+            <select id="edu" name="edu"><option value="">Ko'rsatilmagan</option><option value="none">Maktabni tugatmagan</option><option value="school">O'rta</option><option value="college">O'rta maxsus</option><option value="uni">Oliy</option></select></div>
+          <div class="f"><label for="disab">Nogironlik guruhi</label>
+            <select id="disab" name="disab"><option value="">Ko'rsatilmagan</option><option value="0">Yo'q</option><option value="1">I guruh</option><option value="2">II guruh</option><option value="3">III guruh</option></select></div>
+          <div class="f"><label for="debt">Kredit yoki qarzi bormi</label>
+            <select id="debt" name="debt"><option value="">Ko'rsatilmagan</option><option value="no">Yo'q</option><option value="yes">Bor</option></select></div>
+          <div class="f wide"><label for="notes">Fuqaro so'zi bilan: nima kerak (ixtiyoriy)</label><textarea id="notes" name="notes" placeholder="Masalan: Kichik tikuvchilik sexi ochmoqchi, mablag' yetmaydi"></textarea>
+            <span class="hint">Matn tahlilga ta'sir qilmaydi va saqlanmaydi. Til modeli ulangach ishlatiladi.</span></div>
+        </div>
+      </fieldset>
+      <label class="check"><input type="checkbox" id="consent" name="consent"><span>Fuqaro ma'lumotlarini tavsiya olish maqsadida qayta ishlashga rozilik berdi.</span></label>
+      <div class="err" id="err" role="alert"></div>
+      <div class="row">
+        <button class="btn" type="submit">Tavsiya olish</button>
+        <button class="btn ghost" type="button" id="fill">Namuna bilan to'ldirish</button>
+        <button class="btn ghost" type="reset" id="clear">Tozalash</button>
+      </div>
+    </form>
+
+    <aside>
+      <div class="card">
+        <h3>Qoidalar sozlamasi</h3>
+        <p class="hint">Test uchun o'zgartiriladigan qiymat. Rasmiy qiymatni hokimlik mutaxassisi kiritadi.</p>
+        <div class="f" style="margin-top:12px">
+          <label for="thr">Kam ta'minlanganlik chegarasi (so'm, kishi boshiga oyiga)</label>
+          <input id="thr" type="number" min="0" step="50000" inputmode="numeric">
+        </div>
+        <p class="hint" style="margin-top:8px">Bu raqam rasmiy emas, faqat sinov qiymati.</p>
+      </div>
+      <div class="card">
+        <h3>Test rejimi qanday ishlaydi</h3>
+        <ul class="hint" style="padding-left:18px;margin:8px 0 0;display:grid;gap:6px">
+          <li>Tavsiyalar aniq qoidalar bilan hisoblanadi. Til modeli hali ulanmagan.</li>
+          <li>Hech qanday davlat reestriga ulanmagan, faqat siz kiritgan ma'lumot ishlatiladi.</li>
+          <li>Jurnalda to'liq ism emas, bosh harflar saqlanadi. Ma'lumot faqat shu brauzerda turadi.</li>
+          <li>Har bir tavsiyani xodim tasdiqlaydi yoki rad etadi. Qaror xodimda qoladi.</li>
+          <li>Qoidalar namuna. Dastur shartlari rasmiy hujjat bilan tekshirilishi kerak.</li>
+        </ul>
+      </div>
+    </aside>
+  </section>
+
+  <!-- NATIJA -->
+  <section id="view-result" hidden></section>
+
+  <!-- JURNAL -->
+  <section id="view-log" hidden></section>
+</div>
+
+<script>
+"use strict";
+const MFYS=["Xovosobod","Yettiguzar","Karvonsaroy","Bunyodkor","Boshqa MFY"];
+const TYPES={ish:"Ish so'rab keldi",kambagal:"Kambag'allik / ijtimoiy yordam",nogiron:"Nogironlik bilan bog'liq",kredit:"Kredit olmoqchi",talim:"Ta'lim",uy:"Uy-joy",huquq:"Huquqiy maslahat",boshqa:"Boshqa"};
+const REJECT_REASONS=["Fuqaroga mos emas","Shart bajarilmagan","Fuqaro xohlamadi","Ma'lumot yetarli emas","Boshqa"];
+const KEY_CASES="fuqaroai.cases.v1", KEY_CFG="fuqaroai.cfg.v1";
+
+/* ---------- saqlash ---------- */
+function load(k,def){try{const v=localStorage.getItem(k);return v?JSON.parse(v):def}catch(e){return def}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+const mem={cases:null,cfg:null,current:null};
+mem.cfg=load(KEY_CFG,{threshold:1000000});
+mem.cases=load(KEY_CASES,null);
+
+/* ---------- yordamchilar ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=n=>new Intl.NumberFormat("uz-UZ").format(Math.round(n));
+const num=v=>(v===""||v==null||isNaN(Number(v)))?null:Number(v);
+const initials=n=>(n||"").trim().split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()+".").join("")||"—";
+const ageGroup=a=>a==null?"Noma'lum":a<18?"18 dan kichik":a<30?"18–29":a<50?"30–49":"50+";
+const PRI={3:"Yuqori",2:"O'rta",1:"Past"};
+
+/* ---------- qoidalar mexanizmi ---------- */
+function evaluate(p,cfg){
+  const thr=cfg.threshold;
+  const pc=(p.members&&p.income!=null)?p.income/p.members:null;
+  const poor=pc!=null&&pc<thr;
+  const recs=[];
+  const add=(id,title,pri,why,docs,where,steps)=>recs.push({id,title,pri,why,docs,where,steps});
+  const adult=p.age!=null&&p.age>=18;
+  const working=p.age!=null&&p.age>=18&&p.age<=60;
+  const pcTxt=pc!=null?`kishi boshiga oyiga ${fmt(pc)} so'm`:"";
+
+  if(p.work==="jobless"&&adult&&p.age<=65){
+    add("bandlik","Bandlik xizmatida ro'yxatdan o'tish va ish tanlash",p.type==="ish"?3:2,
+      ["Fuqaro ishsiz va mehnat yoshida"].concat(p.type==="ish"?["Murojaat sababi: ish qidirish"]:[]),
+      ["Pasport","Mehnat daftarchasi yoki ish tajribasi haqida ma'lumot","Ta'lim hujjati (bo'lsa)"],
+      "Tumanning bandlik markazi yoki mahalla yettiligi",
+      ["Hujjatlarni tayyorlash","Bandlik markazida ro'yxatdan o'tish","Mos bo'sh o'rinlar ro'yxatini olish"]);
+  }
+  if(working&&(p.work==="jobless"||p.edu==="none"||p.edu==="school")&&p.age<=40){
+    add("kasb","Kasb-hunar kursiga yuborish",p.work==="jobless"?2:1,
+      ["Yoshi 40 dan oshmagan",p.work==="jobless"?"Ishsiz":"Kasbiy ta'limi yo'q yoki o'rta ta'lim bilan cheklangan"],
+      ["Pasport","Ta'lim hujjati"],"Kasb-hunar o'quv markazi, bandlik markazi orqali",
+      ["Qiziqish va mahalliy talab bo'yicha yo'nalish tanlash","Kursga ro'yxatdan o'tish"]);
+  }
+  if(working&&(p.type==="ish"||p.type==="kredit"||p.work==="jobless"||p.work==="home")){
+    add("tadbirkor","O'zini o'zi band qilish va kichik tadbirkorlik bo'yicha maslahat",p.type==="kredit"||p.type==="ish"?2:1,
+      ["Mehnat yoshida","Murojaat ish yoki mablag' bilan bog'liq yoki fuqaro hozir bandligi yo'q"],
+      ["Pasport","Qisqa biznes-g'oya (1 sahifa)"],"Mahalla yettiligi, tadbirkorlikni qo'llab-quvvatlash markazi",
+      ["Biznes g'oyani yozib olish","Daromad va xarajatni taxmin qilish","Moliyalashtirish yo'llarini ko'rib chiqish"]);
+  }
+  if(poor){
+    add("reestr","Ijtimoiy reestrga kiritish masalasini ko'rib chiqish",3,
+      [`Oila daromadi ${pcTxt}, belgilangan sinov chegarasidan (${fmt(thr)} so'm) past`],
+      ["Oila a'zolari ro'yxati","Daromad haqida ma'lumot","Uy-joy holati bo'yicha ma'lumot"],
+      "Mahalla yettiligi, ijtimoiy xodim",
+      ["Oilaning holatini joyida tekshirish","Yettilik yig'ilishida ko'rib chiqish","Natijani fuqaroga xabar qilish"]);
+  }
+  if(p.children>=1&&poor){
+    add("bolalar","Bolalar uchun imtiyozlar va maktabgacha ta'lim imkoniyatini tekshirish",2,
+      [`${p.children} nafar bolasi bor`,"Oila daromadi past"],
+      ["Bola tug'ilganlik guvohnomasi","Oila tarkibi ma'lumoti"],"Mahalla yettiligi, maktabgacha ta'lim bo'limi",
+      ["Bolalarning yoshini aniqlash","Mos imtiyoz turlarini tekshirish","Ariza berishda yordam"]);
+  }
+  if(p.children>=3){
+    add("kopbola","Ko'p bolali oilalar uchun yordam turlarini tekshirish",2,[`${p.children} nafar bolasi bor`],
+      ["Barcha bolalar guvohnomasi","Oila tarkibi ma'lumoti"],"Mahalla yettiligi, xotin-qizlar yetakchisi",
+      ["Mavjud yordam turlarini ro'yxatdan tekshirish","Hujjatlarni to'plash"]);
+  }
+  if(p.disab>=1){
+    add("reabil","Reabilitatsiya va texnik vositalar bo'yicha murojaat",3,
+      [`Nogironlik guruhi: ${["","I","II","III"][p.disab]}`],
+      ["Nogironlik haqida ma'lumotnoma","Pasport","Individual reabilitatsiya dasturi (bo'lsa)"],
+      "Tuman ijtimoiy himoya bo'limi, tibbiy-mehnat ekspertiza komissiyasi",
+      ["Individual dastur holatini tekshirish","Kerakli texnik vositani aniqlash","Ariza berish"]);
+    if(working&&p.work==="jobless"){
+      add("moslish","Moslashtirilgan ish o'rni va masofaviy ish imkoniyati",2,
+        ["Nogironligi bor, mehnat yoshida va ishsiz"],["Nogironlik ma'lumotnomasi","Ta'lim hujjati"],
+        "Bandlik markazi",["Mehnat qobiliyati cheklovini aniqlash","Mos ish o'rinlarini tanlash"]);
+    }
+  }
+  if(p.age!=null&&((p.age>=65&&p.members===1)||(p.disab==="1"||p.disab===1))){
+    add("uyda","Uyda ijtimoiy xizmat ehtiyojini baholash",3,
+      [p.age>=65&&p.members===1?"Yolg'iz yashovchi keksa":"I guruh nogironligi"],
+      ["Pasport","Tibbiy ma'lumotnoma (bo'lsa)"],"Ijtimoiy xodim, tuman ijtimoiy xizmat bo'limi",
+      ["Ijtimoiy xodimning uyga tashrifi","Xizmat ehtiyojini baholash","Ro'yxatga olish"]);
+  }
+  if(p.type==="kredit"){
+    if(p.debt==="yes"){
+      add("qarz","Mavjud qarz yukini baholash va moliyaviy maslahat",3,
+        ["Fuqaroning kredit yoki qarzi bor","Yangi kredit olishdan oldin to'lov qobiliyatini tekshirish kerak"],
+        ["Mavjud kredit shartnomalari","Daromad haqida ma'lumot"],"Bank maslahatchisi, mahalla yettiligi",
+        ["Oylik to'lovlar va daromadni solishtirish","Qarzni qayta rejalashtirish imkonini bank bilan muhokama qilish"]);
+    }
+    add("kredit","Imtiyozli kredit dasturlari bo'yicha maslahat",p.debt==="yes"?1:2,
+      ["Murojaat kredit olish bilan bog'liq"].concat(poor?["Oila daromadi past, imtiyozli shartlar mos kelishi mumkin"]:[]),
+      ["Pasport","Daromad yoki biznes-reja","Kafillik yoki garov bo'yicha ma'lumot"],"Bank filiali, mahalla yettiligi",
+      ["Kredit maqsadini aniqlash","Mos dasturlar shartlarini solishtirish","Hujjatlarni tayyorlash"]);
+  }
+  if(p.housing==="none"||p.housing==="bad"||p.type==="uy"){
+    add("uy","Uy-joy dasturlari bo'yicha ro'yxatga olish va maslahat",p.housing==="none"?3:2,
+      [p.housing==="none"?"Uy-joyi yo'q":p.housing==="bad"?"Uy-joy sharoiti yomon":"Murojaat uy-joy bilan bog'liq"],
+      ["Pasport","Oila tarkibi","Uy-joy holati haqida ma'lumot"],"Mahalla yettiligi, tuman hokimligi",
+      ["Uy-joy holatini joyida ko'rish","Mos dasturlar shartlarini tekshirish","Ariza berish"]);
+  }
+  if(p.type==="talim"&&p.age!=null&&p.age<=30){
+    add("talim","Ta'lim imkoniyatlari: grant, kontrakt, stipendiya bo'yicha maslahat",2,
+      ["Murojaat ta'lim bilan bog'liq","Yoshi 30 dan oshmagan"],["Pasport","Ta'lim hujjati","Test natijasi (bo'lsa)"],
+      "Yoshlar yetakchisi, ta'lim bo'limi",["Ta'lim yo'nalishini aniqlash","Qabul va moliyalashtirish shartlarini tekshirish"]);
+  }
+  if(p.type==="huquq"){
+    add("huquq","Huquqiy maslahatga yo'naltirish",2,["Murojaat huquqiy masala bo'yicha"],
+      ["Masalaga oid hujjatlar nusxasi"],"Mahalla huquqiy maslahatchisi yoki tuman yuridik xizmati",
+      ["Muammoni qisqa yozib olish","Mutaxassis qabuliga yozdirish"]);
+  }
+  if(p.age!=null&&p.age>=50){
+    add("tibbiy","Profilaktik tibbiy ko'rikdan o'tishni eslatish",1,["Yoshi 50 dan oshgan"],["Pasport"],
+      "Oilaviy poliklinika",["Ko'rik kunini kelishish"]);
+  }
+  if(!recs.length){
+    add("suhbat","Mahalla yettiligi bilan suhbat o'tkazish",1,
+      ["Berilgan ma'lumot bo'yicha aniq dastur topilmadi","Ko'proq ma'lumot kiritilsa, tavsiya aniqroq bo'ladi"],
+      [],"Mahalla yettiligi",["Fuqaro bilan batafsil suhbat","Ehtiyojni aniqlab, qayta kiritish"]);
+  }
+  recs.sort((a,b)=>b.pri-a.pri);
+  const req=[["age","yoshi"],["members","oila a'zolari"],["income","daromad"],["work","bandlik"],["disab","nogironlik"],["housing","uy-joy"],["debt","qarz"],["edu","ta'lim"]];
+  const missing=req.filter(([k])=>p[k]==null||p[k]==="").map(r=>r[1]);
+  const conf=Math.round(100*(1-missing.length/req.length));
+  return {recs:recs.slice(0,6),pc,conf,missing,poor};
+}
+
+/* ---------- forma ---------- */
+function fillSelects(){
+  $("#mfy").innerHTML='<option value="">Tanlang</option>'+MFYS.map(m=>`<option>${esc(m)}</option>`).join("");
+  $("#type").innerHTML='<option value="">Tanlang</option>'+Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join("");
+}
+function readForm(){
+  const f=new FormData($("#form")), g=k=>f.get(k);
+  return {name:(g("name")||"").trim(),age:num(g("age")),gender:g("gender")||"",mfy:g("mfy")||"",type:g("type")||"",
+    members:num(g("members")),children:num(g("children")),income:num(g("income")),housing:g("housing")||"",
+    work:g("work")||"",edu:g("edu")||"",disab:g("disab")===""?null:Number(g("disab")),debt:g("debt")||"",consent:$("#consent").checked};
+}
+$("#form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const p=readForm(), err=[];
+  if(!p.name)err.push("ism");
+  if(p.age==null)err.push("yoshi");
+  if(!p.mfy)err.push("MFY");
+  if(!p.type)err.push("murojaat turi");
+  const msg=$("#err");
+  if(err.length){msg.textContent="To'ldirish kerak: "+err.join(", ")+".";return}
+  if(!p.consent){msg.textContent="Fuqaro roziligini belgilang.";return}
+  if(p.members!=null&&p.children!=null&&p.children>=p.members){msg.textContent="Bolalar soni oila a'zolaridan kam bo'lishi kerak.";return}
+  msg.textContent="";
+  const out=evaluate(p,mem.cfg);
+  mem.current={p,out,decisions:{},saved:false};
+  renderResult();show("result");
+});
+$("#form").addEventListener("reset",()=>{$("#err").textContent=""});
+$("#fill").addEventListener("click",()=>{
+  const v={name:"Aziza Karimova",age:34,gender:"Ayol",mfy:"Xovosobod",type:"ish",members:5,children:3,income:3200000,housing:"rent",work:"jobless",edu:"college",disab:"0",debt:"no"};
+  for(const [k,val] of Object.entries(v)){const el=$("#"+k);if(el)el.value=val}
+  $("#consent").checked=true;
+});
+$("#thr").addEventListener("change",()=>{
+  const v=num($("#thr").value);
+  if(v!=null&&v>=0){mem.cfg.threshold=v;save(KEY_CFG,mem.cfg)}
+});
+
+/* ---------- natija ---------- */
+function renderResult(){
+  const el=$("#view-result"), c=mem.current;
+  if(!c){el.innerHTML='<div class="card empty">Hali qabul kiritilmagan. «Yangi qabul» bo\'limidan boshlang.</div>';return}
+  const {p,out}=c;
+  const done=Object.keys(c.decisions).length;
+  el.innerHTML=`
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <div><h2>${esc(p.name)}</h2><p class="hint">${esc(p.mfy)} MFY · ${esc(TYPES[p.type])}</p></div>
+      <button class="btn ghost small" id="back">Ma'lumotni o'zgartirish</button>
+    </div>
+    <div class="sum" style="margin-top:14px">
+      <div><b>Yoshi</b>${p.age}</div>
+      <div><b>Oila</b>${p.members!=null?p.members+" kishi":"—"}${p.children?`, ${p.children} bola`:""}</div>
+      <div><b>Daromad</b>${out.pc!=null?fmt(out.pc)+" so'm/kishi":"—"}</div>
+      <div><b>Tavsiya ishonchliligi</b>${out.conf}%<div class="meter"><i style="width:${out.conf}%"></i></div></div>
+    </div>
+    ${out.missing.length?`<p class="note" style="margin-top:12px">Kiritilmagan: ${esc(out.missing.join(", "))}. Ularni qo'shsangiz, tavsiya aniqroq bo'ladi.</p>`:""}
+  </div>
+  <div style="margin-top:16px" id="recs">${out.recs.map(recHtml).join("")}</div>
+  <div class="card row" style="justify-content:space-between">
+    <span class="hint" id="progress">${done} / ${out.recs.length} tavsiya bo'yicha qaror belgilandi</span>
+    <span class="row"><button class="btn" id="saveCase">Qabulni saqlash</button></span>
+  </div>`;
+  $("#back").onclick=()=>show("intake");
+  $("#saveCase").onclick=saveCase;
+}
+function recHtml(r,i){
+  const d=mem.current.decisions[r.id]||{};
+  const cls=d.d?"dec-"+d.d:"";
+  const btn=(k,t)=>`<button type="button" class="${k}" data-act="${k}" data-id="${r.id}" aria-pressed="${d.d===k}">${t}</button>`;
+  return `<article class="rec ${cls}" data-rec="${r.id}">
+    <div class="rec-head"><h3>${i+1}. ${esc(r.title)}</h3><span class="tag p${r.pri}">${PRI[r.pri]} ustuvorlik</span></div>
+    <span class="lbl">Nima uchun</span>
+    <ul>${r.why.map(w=>`<li>${esc(w)}</li>`).join("")}</ul>
+    <dl>
+      <dt>Qayerga</dt><dd>${esc(r.where)}</dd>
+      <dt>Hujjatlar</dt><dd>${r.docs.length?esc(r.docs.join(", ")):"Hozircha kerak emas"}</dd>
+      <dt>Qadamlar</dt><dd>${r.steps.map((s,k)=>`${k+1}) ${esc(s)}`).join("; ")}</dd>
+    </dl>
+    <p class="verify">Qoida namuna. Dastur shartlari rasmiy hujjat bilan tekshirilsin.</p>
+    <div class="decide">
+      ${btn("ok","Tasdiqlash")}${btn("edit","O'zgartirish kerak")}${btn("no","Rad etish")}
+      ${(d.d==="no"||d.d==="edit")?`<select data-reason="${r.id}" aria-label="Sabab"><option value="">Sababni tanlang</option>${REJECT_REASONS.map(x=>`<option${d.reason===x?" selected":""}>${esc(x)}</option>`).join("")}</select>`:""}
+    </div>
+  </article>`;
+}
+$("#view-result").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-act]");if(!b||!mem.current)return;
+  const id=b.dataset.id, act=b.dataset.act;
+  const cur=mem.current.decisions[id];
+  if(cur&&cur.d===act)delete mem.current.decisions[id]; else mem.current.decisions[id]={d:act,reason:""};
+  mem.current.saved=false;
+  const idx=mem.current.out.recs.findIndex(r=>r.id===id);
+  const node=document.querySelector(`[data-rec="${id}"]`);
+  node.outerHTML=recHtml(mem.current.out.recs[idx],idx);
+  $("#progress").textContent=`${Object.keys(mem.current.decisions).length} / ${mem.current.out.recs.length} tavsiya bo'yicha qaror belgilandi`;
+});
+$("#view-result").addEventListener("change",e=>{
+  const s=e.target.closest("select[data-reason]");if(!s||!mem.current)return;
+  mem.current.decisions[s.dataset.reason].reason=s.value;
+});
+function saveCase(){
+  const c=mem.current;if(!c)return;
+  const miss=c.out.recs.filter(r=>!c.decisions[r.id]);
+  const noReason=Object.values(c.decisions).some(x=>(x.d==="no"||x.d==="edit")&&!x.reason);
+  const old=$("#saveMsg");if(old)old.remove();
+  const say=t=>{const s=document.createElement("p");s.id="saveMsg";s.className="err";s.textContent=t;$("#saveCase").parentElement.after(s)};
+  if(miss.length){say(`Har bir tavsiya bo'yicha qaror belgilang (${miss.length} ta qoldi).`);return}
+  if(noReason){say("Rad etilgan yoki o'zgartirilgan tavsiyalar uchun sabab tanlang.");return}
+  if(c.saved){show("log");return}
+  const cases=ensureCases();
+  cases.unshift({id:"Q-"+String(Date.now()).slice(-6),ts:Date.now(),ini:initials(c.p.name),age:c.p.age,gender:c.p.gender,mfy:c.p.mfy,type:c.p.type,
+    pc:c.out.pc,conf:c.out.conf,recs:c.out.recs.map(r=>({id:r.id,title:r.title,pri:r.pri})),decisions:c.decisions,example:false});
+  save(KEY_CASES,cases);c.saved=true;
+  show("log");
+}
+
+/* ---------- jurnal ---------- */
+function seedCases(){
+  const S=[
+    ["A.K.",34,"Ayol","Xovosobod","ish",{members:5,children:3,income:3200000,housing:"rent",work:"jobless",edu:"college",disab:0,debt:"no"}],
+    ["B.R.",52,"Erkak","Yettiguzar","nogiron",{members:4,children:1,income:2100000,housing:"own",work:"jobless",edu:"school",disab:2,debt:"no"}],
+    ["S.T.",27,"Ayol","Karvonsaroy","kredit",{members:3,children:1,income:6500000,housing:"own",work:"self",edu:"uni",disab:0,debt:"yes"}],
+    ["M.Y.",71,"Ayol","Xovosobod","kambagal",{members:1,children:0,income:900000,housing:"bad",work:"retired",edu:"school",disab:0,debt:"no"}],
+    ["J.N.",22,"Erkak","Bunyodkor","talim",{members:6,children:2,income:4800000,housing:"own",work:"student",edu:"school",disab:0,debt:"no"}],
+    ["D.A.",41,"Erkak","Yettiguzar","ish",{members:4,children:2,income:7000000,housing:"own",work:"jobless",edu:"college",disab:0,debt:"no"}],
+    ["N.H.",38,"Ayol","Karvonsaroy","kambagal",{members:7,children:5,income:2600000,housing:"none",work:"home",edu:"school",disab:0,debt:"no"}],
+    ["R.Q.",58,"Erkak","Bunyodkor","huquq",{members:3,children:0,income:5200000,housing:"own",work:"employed",edu:"uni",disab:0,debt:"no"}],
+    ["Z.M.",30,"Ayol","Xovosobod","nogiron",{members:4,children:2,income:3000000,housing:"rent",work:"jobless",edu:"uni",disab:3,debt:"no"}],
+    ["O.B.",46,"Erkak","Karvonsaroy","kredit",{members:5,children:3,income:5500000,housing:"own",work:"self",edu:"college",disab:0,debt:"no"}]
+  ];
+  const day=86400000, now=Date.now();
+  return S.map((s,i)=>{
+    const p=Object.assign({age:s[1],gender:s[2],mfy:s[3],type:s[4]},s[5]);
+    const out=evaluate(p,{threshold:1000000});
+    const dec={};
+    out.recs.forEach((r,k)=>{
+      const v=(i*7+k*3)%10;
+      dec[r.id]=v<7?{d:"ok",reason:""}:v<9?{d:"edit",reason:"Ma'lumot yetarli emas"}:{d:"no",reason:"Fuqaro xohlamadi"};
+    });
+    return {id:"N-"+(100+i),ts:now-(i+1)*day*1.5,ini:s[0],age:s[1],gender:s[2],mfy:s[3],type:s[4],pc:out.pc,conf:out.conf,
+      recs:out.recs.map(r=>({id:r.id,title:r.title,pri:r.pri})),decisions:dec,example:true};
+  });
+}
+function ensureCases(){if(!mem.cases){mem.cases=seedCases();save(KEY_CASES,mem.cases)}return mem.cases}
+function groupStats(list,keyFn){
+  const m=new Map();
+  list.forEach(c=>{
+    const k=keyFn(c), g=m.get(k)||{n:0,recs:0,ok:0,dec:0};
+    g.n++;g.recs+=c.recs.length;
+    Object.values(c.decisions).forEach(d=>{g.dec++;if(d.d==="ok")g.ok++});
+    m.set(k,g);
+  });
+  return [...m.entries()].sort((a,b)=>b[1].n-a[1].n);
+}
+function renderLog(){
+  const cases=ensureCases(), el=$("#view-log");
+  const total=cases.length;
+  const allDec=cases.flatMap(c=>Object.values(c.decisions));
+  const acc=allDec.length?Math.round(100*allDec.filter(d=>d.d==="ok").length/allDec.length):0;
+  const avg=total?(cases.reduce((s,c)=>s+c.recs.length,0)/total).toFixed(1):"0";
+  const byType=groupStats(cases,c=>TYPES[c.type]||c.type);
+  const max=Math.max(1,...byType.map(x=>x[1].n));
+  const fair=(title,rows)=>`<div class="scroll"><table><thead><tr><th>${title}</th><th>Qabullar</th><th>O'rtacha tavsiya</th><th>Tasdiqlangan ulush</th></tr></thead><tbody>${
+    rows.map(([k,g])=>`<tr><td>${esc(k)}</td><td>${g.n}${g.n<5?' <span class="low">(kam)</span>':""}</td><td>${(g.recs/g.n).toFixed(1)}</td><td>${g.dec?Math.round(100*g.ok/g.dec)+"%":"—"}</td></tr>`).join("")}</tbody></table></div>`;
+  el.innerHTML=`
+  <div class="stats">
+    <div class="stat"><b>${total}</b><span>Jami qabul</span></div>
+    <div class="stat"><b>${avg}</b><span>Qabulga o'rtacha tavsiya</span></div>
+    <div class="stat"><b>${acc}%</b><span>Xodim tasdiqlagan tavsiyalar</span></div>
+    <div class="stat"><b>${cases.filter(c=>c.example).length}</b><span>Namuna qabullar</span></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>Murojaat turlari</h3>
+    <div class="bars">${byType.map(([k,g])=>`<div class="bar"><span>${esc(k)}</span><i style="width:${Math.round(100*g.n/max)}%"></i><em>${g.n}</em></div>`).join("")}</div>
+  </div>
+  <div class="card">
+    <h3>Xolislik tekshiruvi</h3>
+    <p class="hint">Guruhlar o'rtasida katta farq chiqsa, qoidalarni tekshirish kerak. 5 tadan kam qabulli guruh bo'yicha xulosa chiqarmang.</p>
+    <div style="margin-top:12px;display:grid;gap:16px">${fair("Yosh guruhi",groupStats(cases,c=>ageGroup(c.age)))}${fair("Jins",groupStats(cases,c=>c.gender||"Ko'rsatilmagan"))}${fair("MFY",groupStats(cases,c=>c.mfy))}</div>
+  </div>
+  <div class="card">
+    <h3>Qabullar</h3>
+    <div class="scroll" style="margin-top:8px"><table><thead><tr><th>Raqam</th><th>Sana</th><th>Fuqaro</th><th>MFY</th><th>Murojaat</th><th>Birinchi tavsiya</th><th>Qaror</th></tr></thead><tbody>
+    ${cases.map(c=>{
+      const ds=Object.values(c.decisions),ok=ds.filter(d=>d.d==="ok").length;
+      return `<tr><td>${esc(c.id)}${c.example?' <span class="ex">namuna</span>':""}</td><td>${new Date(c.ts).toLocaleDateString("uz-UZ")}</td><td>${esc(c.ini)}, ${c.age}</td><td>${esc(c.mfy)}</td><td>${esc(TYPES[c.type]||c.type)}</td><td class="wrapc">${esc(c.recs[0]?c.recs[0].title:"—")}</td><td>${ok} / ${ds.length} tasdiqlandi</td></tr>`}).join("")}
+    </tbody></table></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn ghost small" id="csv">CSV ko'rsatish</button>
+      <button class="btn ghost small" id="reseed">Namuna qabullarni tiklash</button>
+      <button class="btn ghost small" id="wipe">Jurnalni tozalash</button>
+    </div>
+    <div id="csvbox"></div>
+  </div>`;
+  $("#csv").onclick=showCsv;
+  $("#reseed").onclick=()=>{mem.cases=seedCases();save(KEY_CASES,mem.cases);renderLog()};
+  const w=$("#wipe");
+  w.onclick=()=>{
+    if(w.dataset.ask){mem.cases=[];save(KEY_CASES,mem.cases);renderLog();return}
+    w.dataset.ask="1";w.textContent="Aniq tozalansinmi? Yana bosing";w.className="btn danger small";
+  };
+}
+function showCsv(){
+  const rows=[["raqam","sana","yosh","jins","mfy","murojaat","tavsiyalar","tasdiqlangan","jami_qaror"]];
+  mem.cases.forEach(c=>{const ds=Object.values(c.decisions);
+    rows.push([c.id,new Date(c.ts).toISOString().slice(0,10),c.age,c.gender,c.mfy,TYPES[c.type]||c.type,c.recs.length,ds.filter(d=>d.d==="ok").length,ds.length])});
+  const txt=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+  $("#csvbox").innerHTML=`<textarea class="out" id="csvta" readonly aria-label="CSV matni"></textarea><p class="hint" id="csvmsg"></p>`;
+  const ta=$("#csvta");ta.value=txt;ta.focus();ta.select();
+  const done=ok=>{$("#csvmsg").textContent=ok?"Nusxa olindi.":"Matn tanlandi, nusxa olish uchun Ctrl+C (yoki matnni bosib turing) ni bosing."};
+  try{navigator.clipboard.writeText(txt).then(()=>done(true),()=>done(false))}catch(e){done(false)}
+}
+
+/* ---------- bo'limlar ---------- */
+function show(v){
+  ["intake","result","log"].forEach(k=>{
+    $("#view-"+k).hidden=k!==v;
+    $("#tab-"+k).setAttribute("aria-selected",String(k===v));
+  });
+  if(v==="result")renderResult();
+  if(v==="log")renderLog();
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+
+fillSelects();
+$("#thr").value=mem.cfg.threshold;
+</script>
+
+</body></html><script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="67d04c49-0522-419b-9b9c-fd03321fc444" data-app-host="app.netlify.com" data-account-tier="free"></script>
