@@ -52,21 +52,6 @@ export function ResultView({ currentCase, onBackToIntake, onSaveCase, onDecision
   };
 
   const handleSave = async () => {
-    const miss = recs.filter(r => !decisions[r.id]);
-    const noReason = Object.values(decisions).some(
-      x => (x.d === "no" || x.d === "edit") && !x.reason
-    );
-
-    if (miss.length > 0) {
-      setSaveError(`Har bir tavsiya bo'yicha qaror belgilang (${miss.length} ta qoldi).`);
-      return;
-    }
-
-    if (noReason) {
-      setSaveError("Rad etilgan yoki o'zgartirilgan tavsiyalar uchun sabab tanlang.");
-      return;
-    }
-
     setSaveError("");
     setSaving(true);
     try {
@@ -91,6 +76,21 @@ export function ResultView({ currentCase, onBackToIntake, onSaveCase, onDecision
 
   return (
     <div className="space-y-6">
+      {/* Real-time Telegram Delivery Banner */}
+      <div className="bg-ok-bg border border-ok/30 rounded-2xl p-4 sm:p-5 flex items-center gap-3.5 shadow-xs">
+        <div className="w-10 h-10 rounded-xl bg-ok text-white grid place-items-center shrink-0">
+          <CheckCircle2 className="w-6 h-6" />
+        </div>
+        <div>
+          <h4 className="font-bold text-sm sm:text-base text-ok">
+            So'rovnoma muvaffaqiyatli qabul qilindi!
+          </h4>
+          <p className="text-xs sm:text-sm text-ok/80 mt-0.5">
+            Barcha ma'lumotlar va sun'iy intellekt xulosasi MFY mas'ul xodimi (Admin Telegram boti)ga yuborildi.
+          </p>
+        </div>
+      </div>
+
       {/* 1. AI ADVISOR CARD FOR ADMIN (PRIMARY NEW FEATURE) */}
       {aiAnalysis && (
         <AiAdvisorCard

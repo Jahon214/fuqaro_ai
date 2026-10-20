@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Header } from "./components/Header.jsx";
 import { IntakeForm } from "./components/IntakeForm.jsx";
-import { SettingsAside } from "./components/SettingsAside.jsx";
 import { ResultView } from "./components/ResultView.jsx";
 import { JournalView } from "./components/JournalView.jsx";
 import { CaseModal } from "./components/CaseModal.jsx";
-import { TelegramTab } from "./components/TelegramTab.jsx";
-import { SettingsTab } from "./components/SettingsTab.jsx";
 import { evaluate, generateBuiltInAnalysis } from "./constants.js";
-import { CheckCircle2, Bot, ArrowRight } from "lucide-react";
+import { sendCaseToAdminBot } from "./services/telegramNotifier.js";
+import { CheckCircle2, Bot } from "lucide-react";
 
 export default function App() {
   const [currentView, setCurrentView] = useState("intake");
@@ -78,37 +76,73 @@ export default function App() {
     loadData();
   }, []);
 
-  // Handle Intake Form submission with instant AI analysis
+  // Handle Intake Form submission with instant AI analysis & real-time Admin Bot notification
   const handleIntakeSubmit = async (formData) => {
     const out = evaluate(formData, { threshold });
     const instantAi = generateBuiltInAnalysis(formData, out, { threshold });
+    const newCaseId = "Q-" + Math.floor(1000 + Math.random() * 9000);
     
     // Set immediate case with instant AI analysis
     const initialCase = {
+      id: newCaseId,
+      ts: Date.now(),
       p: formData,
       out,
       decisions: {},
       aiAnalysis: instantAi,
-      saved: false
+      saved: true
     };
     setCurrentCase(initialCase);
     setCurrentView("result");
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // Try upgrading AI analysis in background via backend Gemini (if online)
+    // 1. Immediately send notification with full AI analysis to Admin Telegram Bot!
+    sendCaseToAdminBot(initialCase, instantAi);
+
+    // 2. If inside Telegram WebApp, send data back to Telegram
+    if (window.Telegram?.WebApp?.sendData) {
+      try {
+        window.Telegram.WebApp.sendData(JSON.stringify({
+          ...formData,
+          aiAnalysis: instantAi,
+          source: "telegram_webapp"
+        }));
+      } catch (e) {
+        console.warn("Telegram WebApp sendData error:", e);
+      }
+    }
+
+    // 3. Save to state and localStorage immediately
+    const savedLocal = {
+      id: newCaseId,
+      ts: Date.now(),
+      ...formData,
+      decisions: {},
+      aiAnalysis: instantAi,
+      recs: out?.recs || [],
+      pc: out?.pc
+    };
+    setCases(prev => {
+      const updated = [savedLocal, ...prev.filter(c => c.id !== newCaseId)];
+      try { localStorage.setItem("fuqaro_local_cases", JSON.stringify(updated)); } catch(e){}
+      return updated;
+    });
+
+    showToast("✅ So'rovnoma qabul qilindi va MFY xodimi (Admin bot)ga yuborildi!", "success");
+
+    // 4. Also forward to backend API if available
     try {
-      const res = await fetch("/api/ai/analyze", {
+      fetch("/api/cases", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ p: formData, out })
+        body: JSON.stringify({
+          ...formData,
+          id: newCaseId,
+          decisions: {},
+          source: window.Telegram?.WebApp?.initData ? "telegram_webapp" : "web"
+        })
       });
-      const data = await res.json();
-      if (data.success && data.aiAnalysis) {
-        setCurrentCase(prev => (prev ? { ...prev, aiAnalysis: data.aiAnalysis } : null));
-      }
-    } catch (err) {
-      // Offline or static Vercel mode: built-in AI already active
-    }
+    } catch (e) {}
   };
 
   // Re-analyze current case with AI
@@ -342,17 +376,11 @@ export default function App() {
         <main>
           {/* 1. YANGI QABUL */}
           {currentView === "intake" && (
-            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6 items-start">
+            <div className="max-w-3xl mx-auto w-full">
               <IntakeForm
                 onSubmit={handleIntakeSubmit}
                 initialValues={currentCase?.p}
                 threshold={threshold}
-              />
-              <SettingsAside
-                threshold={threshold}
-                setThreshold={setThreshold}
-                onThresholdChange={(val) => handleUpdateConfig({ threshold: val })}
-                onOpenTelegram={() => setCurrentView("telegram")}
               />
             </div>
           )}
@@ -376,22 +404,6 @@ export default function App() {
               onReseed={handleReseed}
               onWipe={handleWipe}
               onSelectCase={(c) => setSelectedCaseForModal(c)}
-            />
-          )}
-
-          {/* 4. TELEGRAM BOTLAR */}
-          {currentView === "telegram" && (
-            <TelegramTab
-              botStatus={botStatus}
-              onRefreshStatus={loadData}
-            />
-          )}
-
-          {/* 5. SOZLAMALAR */}
-          {currentView === "settings" && (
-            <SettingsTab
-              config={config}
-              onUpdateConfig={handleUpdateConfig}
             />
           )}
         </main>

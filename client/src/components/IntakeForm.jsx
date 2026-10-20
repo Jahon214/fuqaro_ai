@@ -505,19 +505,19 @@ export function IntakeForm({ onSubmit, initialValues = null, threshold = 1000000
           </div>
         )}
 
-        <div className="flex flex-wrap items-center gap-3 pt-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
           <button
             type="submit"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-sm transition-all shadow-md shadow-emerald-600/20 active:scale-98 cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold text-sm sm:text-base transition-all shadow-md shadow-emerald-600/20 active:scale-98 cursor-pointer"
           >
             <Send className="w-4 h-4" />
-            AI Tavsiya va Xulosa Olish
+            So'rovnomani Yuborish & AI Tahlil Olish
           </button>
 
           <button
             type="button"
             onClick={handleReset}
-            className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl border border-line bg-surface hover:bg-surface-raised text-muted font-semibold text-xs transition cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl border border-line bg-surface hover:bg-surface-raised text-muted font-semibold text-xs sm:text-sm transition cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Tozalash
