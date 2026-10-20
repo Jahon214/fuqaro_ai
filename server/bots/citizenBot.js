@@ -35,6 +35,7 @@ export function createCitizenBot(token, adminNotifier = null) {
   // /start command
   bot.command("start", async (ctx) => {
     const name = ctx.from?.first_name || "Fuqaro";
+    const webAppUrl = getWebAppUrl();
     const welcome = `Assalomu alaykum, <b>${name}</b>!\n\n` +
       `🏛 <b>Xovos Fuqaro AI</b> — Xovos tumani MFY va davlat xizmatlari bo'yicha ko'makchi platformasiga xush kelibsiz.\n\n` +
       `Ushbu bot orqali siz:\n` +
@@ -44,10 +45,19 @@ export function createCitizenBot(token, adminNotifier = null) {
       `• Kasb-hunar o'rganish kurslari\n` +
       `• Nogironlik va tibbiy ko'rik\n\n` +
       `bo'yicha o'zingizga mos dasturlar va aniq yo'riqnomalarni olishingiz mumkin.\n\n` +
-      `Quyidagi tugmalardan birini tanlang:`;
+      `Quyidagi tugma orqali yangi Vercel tizimida so'rovnomani to'ldiring:`;
+
+    const inlineKb = new InlineKeyboard()
+      .webApp("🚀 So'rovnoma to'ldirish (Mini App)", webAppUrl)
+      .row()
+      .url("🌐 Vercel havolasini ochish", webAppUrl);
 
     await ctx.reply(welcome, {
       parse_mode: "HTML",
+      reply_markup: inlineKb
+    });
+
+    await ctx.reply("Yoki quyidagi menyu tugmalaridan foydalaning:", {
       reply_markup: getMainMenu()
     });
   });

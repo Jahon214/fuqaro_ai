@@ -22,6 +22,17 @@ class BotManager {
         this.adminStatus = { connected: true, username: me.username, error: null };
         console.log(`[Admin Bot] Connected successfully as @${me.username}`);
 
+        const webAppUrl = process.env.WEBAPP_URL || db.cfg.webAppUrl || "https://xovos-fuqaroai-psi.vercel.app";
+        if (webAppUrl && webAppUrl.startsWith("https://")) {
+          try {
+            await this.adminBot.api.setChatMenuButton({
+              menu_button: { type: "web_app", text: "Xovos Fuqaro AI Panel", web_app: { url: webAppUrl } }
+            });
+          } catch(e) {
+            console.warn("[Admin Bot] setChatMenuButton error:", e.message);
+          }
+        }
+
         // Start polling in background
         this.adminBot.start({
           onStart: () => console.log(`[Admin Bot] Polling started...`)
@@ -47,6 +58,17 @@ class BotManager {
         const me = await this.citizenBot.api.getMe();
         this.citizenStatus = { connected: true, username: me.username, error: null };
         console.log(`[Citizen Bot] Connected successfully as @${me.username}`);
+
+        const webAppUrl = process.env.WEBAPP_URL || db.cfg.webAppUrl || "https://xovos-fuqaroai-psi.vercel.app";
+        if (webAppUrl && webAppUrl.startsWith("https://")) {
+          try {
+            await this.citizenBot.api.setChatMenuButton({
+              menu_button: { type: "web_app", text: "So'rovnoma", web_app: { url: webAppUrl } }
+            });
+          } catch(e) {
+            console.warn("[Citizen Bot] setChatMenuButton error:", e.message);
+          }
+        }
 
         // Start polling in background
         this.citizenBot.start({

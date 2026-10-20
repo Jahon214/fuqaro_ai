@@ -38,7 +38,16 @@ export function createAdminBot(token) {
       `• /export — Qabullar jurnalini CSV formatida yuklab olish\n` +
       `• /help — Botdan foydalanish bo'yicha yo'riqnoma`;
 
-    await ctx.reply(welcome, { parse_mode: "HTML" });
+    const webAppUrl = getPublicUrl();
+    const inlineKb = new InlineKeyboard()
+      .webApp("🌐 Xovos Fuqaro AI Paneli", webAppUrl)
+      .row()
+      .url("🔗 Vercel manzilini ochish", webAppUrl);
+
+    await ctx.reply(welcome, {
+      parse_mode: "HTML",
+      reply_markup: inlineKb
+    });
   });
 
   // /stats command
