@@ -1,1 +1,1168 @@
-[]
+[
+  {
+    "id": "N-100",
+    "ts": 1792391865044,
+    "ini": "A.K.",
+    "name": "Aziza Karimova",
+    "age": 34,
+    "gender": "Ayol",
+    "mfy": "Xovosobod",
+    "type": "ish",
+    "members": 5,
+    "children": 3,
+    "income": 3200000,
+    "housing": "rent",
+    "work": "jobless",
+    "edu": "college",
+    "disab": 0,
+    "debt": "no",
+    "notes": "",
+    "pc": 640000,
+    "conf": 100,
+    "poor": false,
+    "missing": [],
+    "recs": [
+      {
+        "id": "bandlik",
+        "title": "Bandlik xizmatida ro'yxatdan o'tish va ish tanlash",
+        "pri": 3,
+        "why": [
+          "Fuqaro ishsiz va mehnat yoshida",
+          "Murojaat sababi: ish qidirish"
+        ],
+        "docs": [
+          "Pasport",
+          "Mehnat daftarchasi yoki ish tajribasi haqida ma'lumot",
+          "Ta'lim hujjati (bo'lsa)"
+        ],
+        "where": "Tumanning bandlik markazi yoki mahalla yettiligi",
+        "steps": [
+          "Hujjatlarni tayyorlash",
+          "Bandlik markazida ro'yxatdan o'tish",
+          "Mos bo'sh o'rinlar ro'yxatini olish"
+        ]
+      },
+      {
+        "id": "kasb",
+        "title": "Kasb-hunar kursiga yuborish",
+        "pri": 2,
+        "why": [
+          "Yoshi 40 dan oshmagan",
+          "Ishsiz"
+        ],
+        "docs": [
+          "Pasport",
+          "Ta'lim hujjati"
+        ],
+        "where": "Kasb-hunar o'quv markazi, bandlik markazi orqali",
+        "steps": [
+          "Qiziqish va mahalliy talab bo'yicha yo'nalish tanlash",
+          "Kursga ro'yxatdan o'tish"
+        ]
+      },
+      {
+        "id": "tadbirkor",
+        "title": "O'zini o'zi band qilish va kichik tadbirkorlik bo'yicha maslahat",
+        "pri": 2,
+        "why": [
+          "Mehnat yoshida",
+          "Murojaat ish yoki mablag' bilan bog'liq yoki fuqaro hozir bandligi yo'q"
+        ],
+        "docs": [
+          "Pasport",
+          "Qisqa biznes-g'oya (1 sahifa)"
+        ],
+        "where": "Mahalla yettiligi, tadbirkorlikni qo'llab-quvvatlash markazi",
+        "steps": [
+          "Biznes g'oyani yozib olish",
+          "Daromad va xarajatni taxmin qilish",
+          "Moliyalashtirish yo'llarini ko'rib chiqish"
+        ]
+      },
+      {
+        "id": "kopbola",
+        "title": "Ko'p bolali oilalar uchun yordam turlarini tekshirish",
+        "pri": 2,
+        "why": [
+          "3 nafar bolasi bor"
+        ],
+        "docs": [
+          "Barcha bolalar guvohnomasi",
+          "Oila tarkibi ma'lumoti"
+        ],
+        "where": "Mahalla yettiligi, xotin-qizlar yetakchisi",
+        "steps": [
+          "Mavjud yordam turlarini ro'yxatdan tekshirish",
+          "Hujjatlarni to'plash"
+        ]
+      }
+    ],
+    "decisions": {
+      "bandlik": {
+        "d": "ok",
+        "reason": ""
+      },
+      "kasb": {
+        "d": "ok",
+        "reason": ""
+      },
+      "tadbirkor": {
+        "d": "ok",
+        "reason": ""
+      },
+      "kopbola": {
+        "d": "no",
+        "reason": "Fuqaro xohlamadi"
+      }
+    },
+    "aiAnalysis": {
+      "summary": "Fuqaro mehnat yoshida bo'lib, ayni paytda doimiy daromad manbaiga ega emas. Asosiy e'tiborni kasbga yo'naltirish va doimiy ish o'rniga qaratish lozim.",
+      "povertyRisk": "Past",
+      "debtRisk": "Past",
+      "priorityLevel": "O'rta",
+      "adminAdvice": [
+        "Mahalla hokim yordamchisi bilan birgalikda tumandagi mavjud bo'sh ish o'rinlari yarmarkasiga jalb qilish yoki \"Ishga marhamat\" monomarkaziga kasbiy kursga yo'naltirish.",
+        "Uy-joy sharoiti to'g'risida mahalla yettiligining dalolatnomasini tuzish va subsidiya asosidagi arzon uy-joy dasturi navbatiga kiritish masalasini ko'rib chiqish."
+      ],
+      "recommendedAction": "Tasdiqlash",
+      "actionRationale": "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.",
+      "socialPackage": "«Ko'p bolali oilalarni qo'llab-quvvatlash» ijtimoiy yordami",
+      "engine": "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    },
+    "example": true,
+    "source": "seed",
+    "telegramUserId": null
+  },
+  {
+    "id": "N-101",
+    "ts": 1792262265044,
+    "ini": "B.R.",
+    "name": "Baxtiyor Rahimov",
+    "age": 52,
+    "gender": "Erkak",
+    "mfy": "Yettiguzar",
+    "type": "nogiron",
+    "members": 4,
+    "children": 1,
+    "income": 2100000,
+    "housing": "own",
+    "work": "jobless",
+    "edu": "school",
+    "disab": 2,
+    "debt": "no",
+    "notes": "",
+    "pc": 525000,
+    "conf": 100,
+    "poor": false,
+    "missing": [],
+    "recs": [
+      {
+        "id": "reabil",
+        "title": "Reabilitatsiya va texnik vositalar bo'yicha murojaat",
+        "pri": 3,
+        "why": [
+          "Nogironlik guruhi: II"
+        ],
+        "docs": [
+          "Nogironlik haqida ma'lumotnoma",
+          "Pasport",
+          "Individual reabilitatsiya dasturi (bo'lsa)"
+        ],
+        "where": "Tuman ijtimoiy himoya bo'limi, tibbiy-mehnat ekspertiza komissiyasi",
+        "steps": [
+          "Individual dastur holatini tekshirish",
+          "Kerakli texnik vositani aniqlash",
+          "Ariza berish"
+        ]
+      },
+      {
+        "id": "bandlik",
+        "title": "Bandlik xizmatida ro'yxatdan o'tish va ish tanlash",
+        "pri": 2,
+        "why": [
+          "Fuqaro ishsiz va mehnat yoshida"
+        ],
+        "docs": [
+          "Pasport",
+          "Mehnat daftarchasi yoki ish tajribasi haqida ma'lumot",
+          "Ta'lim hujjati (bo'lsa)"
+        ],
+        "where": "Tumanning bandlik markazi yoki mahalla yettiligi",
+        "steps": [
+          "Hujjatlarni tayyorlash",
+          "Bandlik markazida ro'yxatdan o'tish",
+          "Mos bo'sh o'rinlar ro'yxatini olish"
+        ]
+      },
+      {
+        "id": "moslish",
+        "title": "Moslashtirilgan ish o'rni va masofaviy ish imkoniyati",
+        "pri": 2,
+        "why": [
+          "Nogironligi bor, mehnat yoshida va ishsiz"
+        ],
+        "docs": [
+          "Nogironlik ma'lumotnomasi",
+          "Ta'lim hujjati"
+        ],
+        "where": "Bandlik markazi",
+        "steps": [
+          "Mehnat qobiliyati cheklovini aniqlash",
+          "Mos ish o'rinlarini tanlash"
+        ]
+      },
+      {
+        "id": "tadbirkor",
+        "title": "O'zini o'zi band qilish va kichik tadbirkorlik bo'yicha maslahat",
+        "pri": 1,
+        "why": [
+          "Mehnat yoshida",
+          "Murojaat ish yoki mablag' bilan bog'liq yoki fuqaro hozir bandligi yo'q"
+        ],
+        "docs": [
+          "Pasport",
+          "Qisqa biznes-g'oya (1 sahifa)"
+        ],
+        "where": "Mahalla yettiligi, tadbirkorlikni qo'llab-quvvatlash markazi",
+        "steps": [
+          "Biznes g'oyani yozib olish",
+          "Daromad va xarajatni taxmin qilish",
+          "Moliyalashtirish yo'llarini ko'rib chiqish"
+        ]
+      },
+      {
+        "id": "tibbiy",
+        "title": "Profilaktik tibbiy ko'rikdan o'tishni eslatish",
+        "pri": 1,
+        "why": [
+          "Yoshi 50 dan oshgan"
+        ],
+        "docs": [
+          "Pasport"
+        ],
+        "where": "Oilaviy poliklinika",
+        "steps": [
+          "Ko'rik kunini kelishish"
+        ]
+      }
+    ],
+    "decisions": {
+      "reabil": {
+        "d": "edit",
+        "reason": "Ma'lumot yetarli emas"
+      },
+      "bandlik": {
+        "d": "ok",
+        "reason": ""
+      },
+      "moslish": {
+        "d": "ok",
+        "reason": ""
+      },
+      "tadbirkor": {
+        "d": "ok",
+        "reason": ""
+      },
+      "tibbiy": {
+        "d": "no",
+        "reason": "Fuqaro xohlamadi"
+      }
+    },
+    "aiAnalysis": {
+      "summary": "Fuqaro mehnat yoshida bo'lib, ayni paytda doimiy daromad manbaiga ega emas. Asosiy e'tiborni kasbga yo'naltirish va doimiy ish o'rniga qaratish lozim.",
+      "povertyRisk": "Past",
+      "debtRisk": "Past",
+      "priorityLevel": "Yuqori",
+      "adminAdvice": [
+        "Mahalla hokim yordamchisi bilan birgalikda tumandagi mavjud bo'sh ish o'rinlari yarmarkasiga jalb qilish yoki \"Ishga marhamat\" monomarkaziga kasbiy kursga yo'naltirish.",
+        "Inson ijtimoiy xizmatlar markazi bilan bog'lanib, bepul protez-ortopediya va reabilitatsiya vositalariga bo'lgan ehtiyojni ro'yxatga olish."
+      ],
+      "recommendedAction": "Tasdiqlash",
+      "actionRationale": "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.",
+      "socialPackage": "«Inson» ijtimoiy xizmatlar va reabilitatsiya paketi",
+      "engine": "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    },
+    "example": true,
+    "source": "seed",
+    "telegramUserId": null
+  },
+  {
+    "id": "N-102",
+    "ts": 1792132665044,
+    "ini": "S.T.",
+    "name": "Shahnoza To'rayeva",
+    "age": 27,
+    "gender": "Ayol",
+    "mfy": "Karvonsaroy",
+    "type": "kredit",
+    "members": 3,
+    "children": 1,
+    "income": 6500000,
+    "housing": "own",
+    "work": "self",
+    "edu": "uni",
+    "disab": 0,
+    "debt": "yes",
+    "notes": "",
+    "pc": 2166666.6666666665,
+    "conf": 100,
+    "poor": false,
+    "missing": [],
+    "recs": [
+      {
+        "id": "qarz",
+        "title": "Mavjud qarz yukini baholash va moliyaviy maslahat",
+        "pri": 3,
+        "why": [
+          "Fuqaroning kredit yoki qarzi bor",
+          "Yangi kredit olishdan oldin to'lov qobiliyatini tekshirish kerak"
+        ],
+        "docs": [
+          "Mavjud kredit shartnomalari",
+          "Daromad haqida ma'lumot"
+        ],
+        "where": "Bank maslahatchisi, mahalla yettiligi",
+        "steps": [
+          "Oylik to'lovlar va daromadni solishtirish",
+          "Qarzni qayta rejalashtirish imkonini bank bilan muhokama qilish"
+        ]
+      },
+      {
+        "id": "tadbirkor",
+        "title": "O'zini o'zi band qilish va kichik tadbirkorlik bo'yicha maslahat",
+        "pri": 2,
+        "why": [
+          "Mehnat yoshida",
+          "Murojaat ish yoki mablag' bilan bog'liq yoki fuqaro hozir bandligi yo'q"
+        ],
+        "docs": [
+          "Pasport",
+          "Qisqa biznes-g'oya (1 sahifa)"
+        ],
+        "where": "Mahalla yettiligi, tadbirkorlikni qo'llab-quvvatlash markazi",
+        "steps": [
+          "Biznes g'oyani yozib olish",
+          "Daromad va xarajatni taxmin qilish",
+          "Moliyalashtirish yo'llarini ko'rib chiqish"
+        ]
+      },
+      {
+        "id": "kredit",
+        "title": "Imtiyozli kredit dasturlari bo'yicha maslahat",
+        "pri": 1,
+        "why": [
+          "Murojaat kredit olish bilan bog'liq"
+        ],
+        "docs": [
+          "Pasport",
+          "Daromad yoki biznes-reja",
+          "Kafillik yoki garov bo'yicha ma'lumot"
+        ],
+        "where": "Bank filiali, mahalla yettiligi",
+        "steps": [
+          "Kredit maqsadini aniqlash",
+          "Mos dasturlar shartlarini solishtirish",
+          "Hujjatlarni tayyorlash"
+        ]
+      }
+    ],
+    "decisions": {
+      "qarz": {
+        "d": "ok",
+        "reason": ""
+      },
+      "tadbirkor": {
+        "d": "edit",
+        "reason": "Ma'lumot yetarli emas"
+      },
+      "kredit": {
+        "d": "ok",
+        "reason": ""
+      }
+    },
+    "aiAnalysis": {
+      "summary": "Fuqaro murojaati bo'yicha umumiy holat barqaror, individual tadbirkorlik va imtiyozli kredit dasturlari orqali daromadni oshirish tavsiya etiladi.",
+      "povertyRisk": "Past",
+      "debtRisk": "O'rta",
+      "priorityLevel": "O'rta",
+      "adminAdvice": [
+        "Fuqaroning amaldagi qarz yukini tekshirish; yangi kredit berishdan oldin to'lov qobiliyati va qarz qoplash imkoniyatlarini bank mutaxassisi bilan hisob-kitob qilish."
+      ],
+      "recommendedAction": "Tasdiqlash",
+      "actionRationale": "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.",
+      "socialPackage": "«Kichik biznes va o'zini o'zi band qilish» mikromoliya paketi",
+      "engine": "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    },
+    "example": true,
+    "source": "seed",
+    "telegramUserId": null
+  },
+  {
+    "id": "N-103",
+    "ts": 1792003065044,
+    "ini": "M.Y.",
+    "name": "Mastura Yusupova",
+    "age": 71,
+    "gender": "Ayol",
+    "mfy": "Xovosobod",
+    "type": "kambagal",
+    "members": 1,
+    "children": 0,
+    "income": 900000,
+    "housing": "bad",
+    "work": "retired",
+    "edu": "school",
+    "disab": 0,
+    "debt": "no",
+    "notes": "",
+    "pc": 900000,
+    "conf": 100,
+    "poor": false,
+    "missing": [],
+    "recs": [
+      {
+        "id": "uyda",
+        "title": "Uyda ijtimoiy xizmat ehtiyojini baholash",
+        "pri": 3,
+        "why": [
+          "Yolg'iz yashovchi keksa"
+        ],
+        "docs": [
+          "Pasport",
+          "Tibbiy ma'lumotnoma (bo'lsa)"
+        ],
+        "where": "Ijtimoiy xodim, tuman ijtimoiy xizmat bo'limi",
+        "steps": [
+          "Ijtimoiy xodimning uyga tashrifi",
+          "Xizmat ehtiyojini baholash",
+          "Ro'yxatga olish"
+        ]
+      },
+      {
+        "id": "uy",
+        "title": "Uy-joy dasturlari bo'yicha ro'yxatga olish va maslahat",
+        "pri": 2,
+        "why": [
+          "Uy-joy sharoiti yomon"
+        ],
+        "docs": [
+          "Pasport",
+          "Oila tarkibi",
+          "Uy-joy holati haqida ma'lumot"
+        ],
+        "where": "Mahalla yettiligi, tuman hokimligi",
+        "steps": [
+          "Uy-joy holatini joyida ko'rish",
+          "Mos dasturlar shartlarini tekshirish",
+          "Ariza berish"
+        ]
+      },
+      {
+        "id": "tibbiy",
+        "title": "Profilaktik tibbiy ko'rikdan o'tishni eslatish",
+        "pri": 1,
+        "why": [
+          "Yoshi 50 dan oshgan"
+        ],
+        "docs": [
+          "Pasport"
+        ],
+        "where": "Oilaviy poliklinika",
+        "steps": [
+          "Ko'rik kunini kelishish"
+        ]
+      }
+    ],
+    "decisions": {
+      "uyda": {
+        "d": "ok",
+        "reason": ""
+      },
+      "uy": {
+        "d": "ok",
+        "reason": ""
+      },
+      "tibbiy": {
+        "d": "edit",
+        "reason": "Ma'lumot yetarli emas"
+      }
+    },
+    "aiAnalysis": {
+      "summary": "Fuqaro murojaati bo'yicha umumiy holat barqaror, individual tadbirkorlik va imtiyozli kredit dasturlari orqali daromadni oshirish tavsiya etiladi.",
+      "povertyRisk": "Past",
+      "debtRisk": "Past",
+      "priorityLevel": "Past",
+      "adminAdvice": [
+        "Uy-joy sharoiti to'g'risida mahalla yettiligining dalolatnomasini tuzish va subsidiya asosidagi arzon uy-joy dasturi navbatiga kiritish masalasini ko'rib chiqish."
+      ],
+      "recommendedAction": "Tasdiqlash",
+      "actionRationale": "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.",
+      "socialPackage": "Davlat ijtimoiy ko'mak paketi",
+      "engine": "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    },
+    "example": true,
+    "source": "seed",
+    "telegramUserId": null
+  },
+  {
+    "id": "N-104",
+    "ts": 1791873465044,
+    "ini": "J.N.",
+    "name": "Javohir Nazarov",
+    "age": 22,
+    "gender": "Erkak",
+    "mfy": "Bunyodkor",
+    "type": "talim",
+    "members": 6,
+    "children": 2,
+    "income": 4800000,
+    "housing": "own",
+    "work": "student",
+    "edu": "school",
+    "disab": 0,
+    "debt": "no",
+    "notes": "",
+    "pc": 800000,
+    "conf": 100,
+    "poor": false,
+    "missing": [],
+    "recs": [
+      {
+        "id": "talim",
+        "title": "Ta'lim imkoniyatlari: grant, kontrakt, stipendiya bo'yicha maslahat",
+        "pri": 2,
+        "why": [
+          "Murojaat ta'lim bilan bog'liq",
+          "Yoshi 30 dan oshmagan"
+        ],
+        "docs": [
+          "Pasport",
+          "Ta'lim hujjati",
+          "Test natijasi (bo'lsa)"
+        ],
+        "where": "Yoshlar yetakchisi, ta'lim bo'limi",
+        "steps": [
+          "Ta'lim yo'nalishini aniqlash",
+          "Qabul va moliyalashtirish shartlarini tekshirish"
+        ]
+      },
+      {
+        "id": "kasb",
+        "title": "Kasb-hunar kursiga yuborish",
+        "pri": 1,
+        "why": [
+          "Yoshi 40 dan oshmagan",
+          "Kasbiy ta'limi yo'q yoki o'rta ta'lim bilan cheklangan"
+        ],
+        "docs": [
+          "Pasport",
+          "Ta'lim hujjati"
+        ],
+        "where": "Kasb-hunar o'quv markazi, bandlik markazi orqali",
+        "steps": [
+          "Qiziqish va mahalliy talab bo'yicha yo'nalish tanlash",
+          "Kursga ro'yxatdan o'tish"
+        ]
+      }
+    ],
+    "decisions": {
+      "talim": {
+        "d": "edit",
+        "reason": "Ma'lumot yetarli emas"
+      },
+      "kasb": {
+        "d": "ok",
+        "reason": ""
+      }
+    },
+    "aiAnalysis": {
+      "summary": "Fuqaro murojaati bo'yicha umumiy holat barqaror, individual tadbirkorlik va imtiyozli kredit dasturlari orqali daromadni oshirish tavsiya etiladi.",
+      "povertyRisk": "Past",
+      "debtRisk": "Past",
+      "priorityLevel": "Past",
+      "adminAdvice": [
+        "Fuqaro bilan mahalla binosida yuzma-yuz suhbat o'tkazib, uning reja va ehtiyojlarini aniqlash.",
+        "Murojaat turi bo'yicha tegishli tuman mutaxassisi (yurist yoki bandlik xodimi) qabuliga yozdirish."
+      ],
+      "recommendedAction": "Tasdiqlash",
+      "actionRationale": "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.",
+      "socialPackage": "Davlat ijtimoiy ko'mak paketi",
+      "engine": "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    },
+    "example": true,
+    "source": "seed",
+    "telegramUserId": null
+  },
+  {
+    "id": "N-105",
+    "ts": 1791743865044,
+    "ini": "D.A.",
+    "name": "Dilshod Aliyev",
+    "age": 41,
+    "gender": "Erkak",
+    "mfy": "Yettiguzar",
+    "type": "ish",
+    "members": 4,
+    "children": 2,
+    "income": 7000000,
+    "housing": "own",
+    "work": "jobless",
+    "edu": "college",
+    "disab": 0,
+    "debt": "no",
+    "notes": "",
+    "pc": 1750000,
+    "conf": 100,
+    "poor": false,
+    "missing": [],
+    "recs": [
+      {
+        "id": "bandlik",
+        "title": "Bandlik xizmatida ro'yxatdan o'tish va ish tanlash",
+        "pri": 3,
+        "why": [
+          "Fuqaro ishsiz va mehnat yoshida",
+          "Murojaat sababi: ish qidirish"
+        ],
+        "docs": [
+          "Pasport",
+          "Mehnat daftarchasi yoki ish tajribasi haqida ma'lumot",
+          "Ta'lim hujjati (bo'lsa)"
+        ],
+        "where": "Tumanning bandlik markazi yoki mahalla yettiligi",
+        "steps": [
+          "Hujjatlarni tayyorlash",
+          "Bandlik markazida ro'yxatdan o'tish",
+          "Mos bo'sh o'rinlar ro'yxatini olish"
+        ]
+      },
+      {
+        "id": "tadbirkor",
+        "title": "O'zini o'zi band qilish va kichik tadbirkorlik bo'yicha maslahat",
+        "pri": 2,
+        "why": [
+          "Mehnat yoshida",
+          "Murojaat ish yoki mablag' bilan bog'liq yoki fuqaro hozir bandligi yo'q"
+        ],
+        "docs": [
+          "Pasport",
+          "Qisqa biznes-g'oya (1 sahifa)"
+        ],
+        "where": "Mahalla yettiligi, tadbirkorlikni qo'llab-quvvatlash markazi",
+        "steps": [
+          "Biznes g'oyani yozib olish",
+          "Daromad va xarajatni taxmin qilish",
+          "Moliyalashtirish yo'llarini ko'rib chiqish"
+        ]
+      }
+    ],
+    "decisions": {
+      "bandlik": {
+        "d": "ok",
+        "reason": ""
+      },
+      "tadbirkor": {
+        "d": "edit",
+        "reason": "Ma'lumot yetarli emas"
+      }
+    },
+    "aiAnalysis": {
+      "summary": "Fuqaro mehnat yoshida bo'lib, ayni paytda doimiy daromad manbaiga ega emas. Asosiy e'tiborni kasbga yo'naltirish va doimiy ish o'rniga qaratish lozim.",
+      "povertyRisk": "Past",
+      "debtRisk": "Past",
+      "priorityLevel": "O'rta",
+      "adminAdvice": [
+        "Mahalla hokim yordamchisi bilan birgalikda tumandagi mavjud bo'sh ish o'rinlari yarmarkasiga jalb qilish yoki \"Ishga marhamat\" monomarkaziga kasbiy kursga yo'naltirish."
+      ],
+      "recommendedAction": "Tasdiqlash",
+      "actionRationale": "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.",
+      "socialPackage": "Davlat ijtimoiy ko'mak paketi",
+      "engine": "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    },
+    "example": true,
+    "source": "seed",
+    "telegramUserId": null
+  },
+  {
+    "id": "N-106",
+    "ts": 1791614265044,
+    "ini": "N.H.",
+    "name": "Nodira Hakimova",
+    "age": 38,
+    "gender": "Ayol",
+    "mfy": "Karvonsaroy",
+    "type": "kambagal",
+    "members": 7,
+    "children": 5,
+    "income": 2600000,
+    "housing": "none",
+    "work": "home",
+    "edu": "school",
+    "disab": 0,
+    "debt": "no",
+    "notes": "",
+    "pc": 371428.5714285714,
+    "conf": 100,
+    "poor": false,
+    "missing": [],
+    "recs": [
+      {
+        "id": "uy",
+        "title": "Uy-joy dasturlari bo'yicha ro'yxatga olish va maslahat",
+        "pri": 3,
+        "why": [
+          "Uy-joyi yo'q"
+        ],
+        "docs": [
+          "Pasport",
+          "Oila tarkibi",
+          "Uy-joy holati haqida ma'lumot"
+        ],
+        "where": "Mahalla yettiligi, tuman hokimligi",
+        "steps": [
+          "Uy-joy holatini joyida ko'rish",
+          "Mos dasturlar shartlarini tekshirish",
+          "Ariza berish"
+        ]
+      },
+      {
+        "id": "kopbola",
+        "title": "Ko'p bolali oilalar uchun yordam turlarini tekshirish",
+        "pri": 2,
+        "why": [
+          "5 nafar bolasi bor"
+        ],
+        "docs": [
+          "Barcha bolalar guvohnomasi",
+          "Oila tarkibi ma'lumoti"
+        ],
+        "where": "Mahalla yettiligi, xotin-qizlar yetakchisi",
+        "steps": [
+          "Mavjud yordam turlarini ro'yxatdan tekshirish",
+          "Hujjatlarni to'plash"
+        ]
+      },
+      {
+        "id": "kasb",
+        "title": "Kasb-hunar kursiga yuborish",
+        "pri": 1,
+        "why": [
+          "Yoshi 40 dan oshmagan",
+          "Kasbiy ta'limi yo'q yoki o'rta ta'lim bilan cheklangan"
+        ],
+        "docs": [
+          "Pasport",
+          "Ta'lim hujjati"
+        ],
+        "where": "Kasb-hunar o'quv markazi, bandlik markazi orqali",
+        "steps": [
+          "Qiziqish va mahalliy talab bo'yicha yo'nalish tanlash",
+          "Kursga ro'yxatdan o'tish"
+        ]
+      },
+      {
+        "id": "tadbirkor",
+        "title": "O'zini o'zi band qilish va kichik tadbirkorlik bo'yicha maslahat",
+        "pri": 1,
+        "why": [
+          "Mehnat yoshida",
+          "Murojaat ish yoki mablag' bilan bog'liq yoki fuqaro hozir bandligi yo'q"
+        ],
+        "docs": [
+          "Pasport",
+          "Qisqa biznes-g'oya (1 sahifa)"
+        ],
+        "where": "Mahalla yettiligi, tadbirkorlikni qo'llab-quvvatlash markazi",
+        "steps": [
+          "Biznes g'oyani yozib olish",
+          "Daromad va xarajatni taxmin qilish",
+          "Moliyalashtirish yo'llarini ko'rib chiqish"
+        ]
+      }
+    ],
+    "decisions": {
+      "uy": {
+        "d": "ok",
+        "reason": ""
+      },
+      "kopbola": {
+        "d": "ok",
+        "reason": ""
+      },
+      "kasb": {
+        "d": "edit",
+        "reason": "Ma'lumot yetarli emas"
+      },
+      "tadbirkor": {
+        "d": "ok",
+        "reason": ""
+      }
+    },
+    "aiAnalysis": {
+      "summary": "Fuqaro murojaati bo'yicha umumiy holat barqaror, individual tadbirkorlik va imtiyozli kredit dasturlari orqali daromadni oshirish tavsiya etiladi.",
+      "povertyRisk": "Past",
+      "debtRisk": "Past",
+      "priorityLevel": "Past",
+      "adminAdvice": [
+        "Uy-joy sharoiti to'g'risida mahalla yettiligining dalolatnomasini tuzish va subsidiya asosidagi arzon uy-joy dasturi navbatiga kiritish masalasini ko'rib chiqish."
+      ],
+      "recommendedAction": "Tasdiqlash",
+      "actionRationale": "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.",
+      "socialPackage": "«Ko'p bolali oilalarni qo'llab-quvvatlash» ijtimoiy yordami",
+      "engine": "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    },
+    "example": true,
+    "source": "seed",
+    "telegramUserId": null
+  },
+  {
+    "id": "N-107",
+    "ts": 1791484665044,
+    "ini": "R.Q.",
+    "name": "Rustam Qodirov",
+    "age": 58,
+    "gender": "Erkak",
+    "mfy": "Bunyodkor",
+    "type": "huquq",
+    "members": 3,
+    "children": 0,
+    "income": 5200000,
+    "housing": "own",
+    "work": "employed",
+    "edu": "uni",
+    "disab": 0,
+    "debt": "no",
+    "notes": "",
+    "pc": 1733333.3333333333,
+    "conf": 100,
+    "poor": false,
+    "missing": [],
+    "recs": [
+      {
+        "id": "huquq",
+        "title": "Huquqiy maslahatga yo'naltirish",
+        "pri": 2,
+        "why": [
+          "Murojaat huquqiy masala bo'yicha"
+        ],
+        "docs": [
+          "Masalaga oid hujjatlar nusxasi"
+        ],
+        "where": "Mahalla huquqiy maslahatchisi yoki tuman yuridik xizmati",
+        "steps": [
+          "Muammoni qisqa yozib olish",
+          "Mutaxassis qabuliga yozdirish"
+        ]
+      },
+      {
+        "id": "tibbiy",
+        "title": "Profilaktik tibbiy ko'rikdan o'tishni eslatish",
+        "pri": 1,
+        "why": [
+          "Yoshi 50 dan oshgan"
+        ],
+        "docs": [
+          "Pasport"
+        ],
+        "where": "Oilaviy poliklinika",
+        "steps": [
+          "Ko'rik kunini kelishish"
+        ]
+      }
+    ],
+    "decisions": {
+      "huquq": {
+        "d": "no",
+        "reason": "Fuqaro xohlamadi"
+      },
+      "tibbiy": {
+        "d": "ok",
+        "reason": ""
+      }
+    },
+    "aiAnalysis": {
+      "summary": "Fuqaro murojaati bo'yicha umumiy holat barqaror, individual tadbirkorlik va imtiyozli kredit dasturlari orqali daromadni oshirish tavsiya etiladi.",
+      "povertyRisk": "Past",
+      "debtRisk": "Past",
+      "priorityLevel": "Past",
+      "adminAdvice": [
+        "Fuqaro bilan mahalla binosida yuzma-yuz suhbat o'tkazib, uning reja va ehtiyojlarini aniqlash.",
+        "Murojaat turi bo'yicha tegishli tuman mutaxassisi (yurist yoki bandlik xodimi) qabuliga yozdirish."
+      ],
+      "recommendedAction": "Tasdiqlash",
+      "actionRationale": "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.",
+      "socialPackage": "Davlat ijtimoiy ko'mak paketi",
+      "engine": "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    },
+    "example": true,
+    "source": "seed",
+    "telegramUserId": null
+  },
+  {
+    "id": "N-108",
+    "ts": 1791355065044,
+    "ini": "Z.M.",
+    "name": "Zarina Mahmudova",
+    "age": 30,
+    "gender": "Ayol",
+    "mfy": "Xovosobod",
+    "type": "nogiron",
+    "members": 4,
+    "children": 2,
+    "income": 3000000,
+    "housing": "rent",
+    "work": "jobless",
+    "edu": "uni",
+    "disab": 3,
+    "debt": "no",
+    "notes": "",
+    "pc": 750000,
+    "conf": 100,
+    "poor": false,
+    "missing": [],
+    "recs": [
+      {
+        "id": "reabil",
+        "title": "Reabilitatsiya va texnik vositalar bo'yicha murojaat",
+        "pri": 3,
+        "why": [
+          "Nogironlik guruhi: III"
+        ],
+        "docs": [
+          "Nogironlik haqida ma'lumotnoma",
+          "Pasport",
+          "Individual reabilitatsiya dasturi (bo'lsa)"
+        ],
+        "where": "Tuman ijtimoiy himoya bo'limi, tibbiy-mehnat ekspertiza komissiyasi",
+        "steps": [
+          "Individual dastur holatini tekshirish",
+          "Kerakli texnik vositani aniqlash",
+          "Ariza berish"
+        ]
+      },
+      {
+        "id": "bandlik",
+        "title": "Bandlik xizmatida ro'yxatdan o'tish va ish tanlash",
+        "pri": 2,
+        "why": [
+          "Fuqaro ishsiz va mehnat yoshida"
+        ],
+        "docs": [
+          "Pasport",
+          "Mehnat daftarchasi yoki ish tajribasi haqida ma'lumot",
+          "Ta'lim hujjati (bo'lsa)"
+        ],
+        "where": "Tumanning bandlik markazi yoki mahalla yettiligi",
+        "steps": [
+          "Hujjatlarni tayyorlash",
+          "Bandlik markazida ro'yxatdan o'tish",
+          "Mos bo'sh o'rinlar ro'yxatini olish"
+        ]
+      },
+      {
+        "id": "kasb",
+        "title": "Kasb-hunar kursiga yuborish",
+        "pri": 2,
+        "why": [
+          "Yoshi 40 dan oshmagan",
+          "Ishsiz"
+        ],
+        "docs": [
+          "Pasport",
+          "Ta'lim hujjati"
+        ],
+        "where": "Kasb-hunar o'quv markazi, bandlik markazi orqali",
+        "steps": [
+          "Qiziqish va mahalliy talab bo'yicha yo'nalish tanlash",
+          "Kursga ro'yxatdan o'tish"
+        ]
+      },
+      {
+        "id": "moslish",
+        "title": "Moslashtirilgan ish o'rni va masofaviy ish imkoniyati",
+        "pri": 2,
+        "why": [
+          "Nogironligi bor, mehnat yoshida va ishsiz"
+        ],
+        "docs": [
+          "Nogironlik ma'lumotnomasi",
+          "Ta'lim hujjati"
+        ],
+        "where": "Bandlik markazi",
+        "steps": [
+          "Mehnat qobiliyati cheklovini aniqlash",
+          "Mos ish o'rinlarini tanlash"
+        ]
+      },
+      {
+        "id": "tadbirkor",
+        "title": "O'zini o'zi band qilish va kichik tadbirkorlik bo'yicha maslahat",
+        "pri": 1,
+        "why": [
+          "Mehnat yoshida",
+          "Murojaat ish yoki mablag' bilan bog'liq yoki fuqaro hozir bandligi yo'q"
+        ],
+        "docs": [
+          "Pasport",
+          "Qisqa biznes-g'oya (1 sahifa)"
+        ],
+        "where": "Mahalla yettiligi, tadbirkorlikni qo'llab-quvvatlash markazi",
+        "steps": [
+          "Biznes g'oyani yozib olish",
+          "Daromad va xarajatni taxmin qilish",
+          "Moliyalashtirish yo'llarini ko'rib chiqish"
+        ]
+      }
+    ],
+    "decisions": {
+      "reabil": {
+        "d": "ok",
+        "reason": ""
+      },
+      "bandlik": {
+        "d": "no",
+        "reason": "Fuqaro xohlamadi"
+      },
+      "kasb": {
+        "d": "ok",
+        "reason": ""
+      },
+      "moslish": {
+        "d": "ok",
+        "reason": ""
+      },
+      "tadbirkor": {
+        "d": "edit",
+        "reason": "Ma'lumot yetarli emas"
+      }
+    },
+    "aiAnalysis": {
+      "summary": "Fuqaro mehnat yoshida bo'lib, ayni paytda doimiy daromad manbaiga ega emas. Asosiy e'tiborni kasbga yo'naltirish va doimiy ish o'rniga qaratish lozim.",
+      "povertyRisk": "Past",
+      "debtRisk": "Past",
+      "priorityLevel": "Yuqori",
+      "adminAdvice": [
+        "Mahalla hokim yordamchisi bilan birgalikda tumandagi mavjud bo'sh ish o'rinlari yarmarkasiga jalb qilish yoki \"Ishga marhamat\" monomarkaziga kasbiy kursga yo'naltirish.",
+        "Uy-joy sharoiti to'g'risida mahalla yettiligining dalolatnomasini tuzish va subsidiya asosidagi arzon uy-joy dasturi navbatiga kiritish masalasini ko'rib chiqish.",
+        "Inson ijtimoiy xizmatlar markazi bilan bog'lanib, bepul protez-ortopediya va reabilitatsiya vositalariga bo'lgan ehtiyojni ro'yxatga olish."
+      ],
+      "recommendedAction": "Tasdiqlash",
+      "actionRationale": "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.",
+      "socialPackage": "«Inson» ijtimoiy xizmatlar va reabilitatsiya paketi",
+      "engine": "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    },
+    "example": true,
+    "source": "seed",
+    "telegramUserId": null
+  },
+  {
+    "id": "N-109",
+    "ts": 1791225465044,
+    "ini": "O.B.",
+    "name": "Otabek Boboyev",
+    "age": 46,
+    "gender": "Erkak",
+    "mfy": "Karvonsaroy",
+    "type": "kredit",
+    "members": 5,
+    "children": 3,
+    "income": 5500000,
+    "housing": "own",
+    "work": "self",
+    "edu": "college",
+    "disab": 0,
+    "debt": "no",
+    "notes": "",
+    "pc": 1100000,
+    "conf": 100,
+    "poor": false,
+    "missing": [],
+    "recs": [
+      {
+        "id": "tadbirkor",
+        "title": "O'zini o'zi band qilish va kichik tadbirkorlik bo'yicha maslahat",
+        "pri": 2,
+        "why": [
+          "Mehnat yoshida",
+          "Murojaat ish yoki mablag' bilan bog'liq yoki fuqaro hozir bandligi yo'q"
+        ],
+        "docs": [
+          "Pasport",
+          "Qisqa biznes-g'oya (1 sahifa)"
+        ],
+        "where": "Mahalla yettiligi, tadbirkorlikni qo'llab-quvvatlash markazi",
+        "steps": [
+          "Biznes g'oyani yozib olish",
+          "Daromad va xarajatni taxmin qilish",
+          "Moliyalashtirish yo'llarini ko'rib chiqish"
+        ]
+      },
+      {
+        "id": "kopbola",
+        "title": "Ko'p bolali oilalar uchun yordam turlarini tekshirish",
+        "pri": 2,
+        "why": [
+          "3 nafar bolasi bor"
+        ],
+        "docs": [
+          "Barcha bolalar guvohnomasi",
+          "Oila tarkibi ma'lumoti"
+        ],
+        "where": "Mahalla yettiligi, xotin-qizlar yetakchisi",
+        "steps": [
+          "Mavjud yordam turlarini ro'yxatdan tekshirish",
+          "Hujjatlarni to'plash"
+        ]
+      },
+      {
+        "id": "kredit",
+        "title": "Imtiyozli kredit dasturlari bo'yicha maslahat",
+        "pri": 2,
+        "why": [
+          "Murojaat kredit olish bilan bog'liq"
+        ],
+        "docs": [
+          "Pasport",
+          "Daromad yoki biznes-reja",
+          "Kafillik yoki garov bo'yicha ma'lumot"
+        ],
+        "where": "Bank filiali, mahalla yettiligi",
+        "steps": [
+          "Kredit maqsadini aniqlash",
+          "Mos dasturlar shartlarini solishtirish",
+          "Hujjatlarni tayyorlash"
+        ]
+      }
+    ],
+    "decisions": {
+      "tadbirkor": {
+        "d": "ok",
+        "reason": ""
+      },
+      "kopbola": {
+        "d": "ok",
+        "reason": ""
+      },
+      "kredit": {
+        "d": "no",
+        "reason": "Fuqaro xohlamadi"
+      }
+    },
+    "aiAnalysis": {
+      "summary": "Fuqaro murojaati bo'yicha umumiy holat barqaror, individual tadbirkorlik va imtiyozli kredit dasturlari orqali daromadni oshirish tavsiya etiladi.",
+      "povertyRisk": "Past",
+      "debtRisk": "Past",
+      "priorityLevel": "Past",
+      "adminAdvice": [
+        "Oilaviy tadbirkorlikni rivojlantirish dasturi (OTRD) doirasida 33 million so'mgacha imtiyozli kredit yoki subsidiya shartlarini tanishtirish."
+      ],
+      "recommendedAction": "Tasdiqlash",
+      "actionRationale": "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.",
+      "socialPackage": "«Kichik biznes va o'zini o'zi band qilish» mikromoliya paketi",
+      "engine": "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    },
+    "example": true,
+    "source": "seed",
+    "telegramUserId": null
+  }
+]
