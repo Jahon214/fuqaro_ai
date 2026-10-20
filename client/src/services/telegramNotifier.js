@@ -13,9 +13,27 @@ export async function sendCaseToAdminBot(caseData, aiAnalysis) {
   const ai = aiAnalysis || caseData.aiAnalysis;
   const caseId = caseData.id || "Q-" + Math.floor(1000 + Math.random() * 9000);
 
+  const WORK_LABELS = {
+    jobless: "Ishsiz",
+    employed: "Ishlaydi",
+    self: "O'zini o'zi band qilgan",
+    student: "Talaba / o'quvchi",
+    home: "Uy bekasi",
+    retired: "Pensioner"
+  };
+
+  const HOUSING_LABELS = {
+    own: "O'z uyi, qoniqarli",
+    bad: "O'z uyi, yomon sharoitda",
+    rent: "Ijarada",
+    none: "Uy-joyi yo'q"
+  };
+
   const pc = p.income != null && p.members ? Math.round(p.income / p.members) : null;
   const pcText = pc != null ? `${fmt(pc)} so'm/kishi` : "—";
   const typeLabel = TYPES[p.type] || p.type || "Ko'rsatilmagan";
+  const workLabel = WORK_LABELS[p.work] || p.work || "Ko'rsatilmagan";
+  const housingLabel = HOUSING_LABELS[p.housing] || p.housing || "Ko'rsatilmagan";
 
   let msg = `🔔 <b>YANGI FUQARO SO'ROVNOMASI! (#${caseId})</b>\n` +
     `━━━━━━━━━━━━━━━━━━━━\n` +
@@ -24,8 +42,8 @@ export async function sendCaseToAdminBot(caseData, aiAnalysis) {
     `📌 <b>Murojaat turi:</b> ${typeLabel}\n` +
     `👨‍👩‍👦 <b>Oila:</b> ${p.members || 1} kishi (18 yoshgacha bolalar: ${p.children || 0})\n` +
     `💰 <b>Daromad:</b> ${p.income != null ? fmt(p.income) + " so'm" : "—"} (${pcText})\n` +
-    `💼 <b>Bandlik:</b> ${p.work || "Ko'rsatilmagan"}\n` +
-    `🏠 <b>Uy-joy:</b> ${p.housing || "Ko'rsatilmagan"}\n` +
+    `💼 <b>Bandlik:</b> ${workLabel}\n` +
+    `🏠 <b>Uy-joy:</b> ${housingLabel}\n` +
     `💳 <b>Qarzdorlik:</b> ${p.debt === "yes" ? "Bor" : "Yo'q"}\n`;
 
   if (p.notes) {
