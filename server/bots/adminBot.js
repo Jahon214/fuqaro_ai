@@ -11,7 +11,7 @@ export function createAdminBot(token) {
   const getPublicUrl = () => {
     const url = db.cfg.webAppUrl || process.env.WEBAPP_URL || "";
     if (url && url.startsWith("https://")) return url;
-    return "https://remarkable-sunburst-3f3466.netlify.app";
+    return "https://xovos-fuqaroai-psi.vercel.app";
   };
 
   // Helper to ensure admin chat ID is saved
@@ -354,7 +354,7 @@ export async function notifyAdmins(bot, newCase) {
   const pcText = newCase.pc != null ? `${fmt(newCase.pc)} so'm/kishi` : "—";
   const publicUrl = (db.cfg.webAppUrl && db.cfg.webAppUrl.startsWith("https://")) 
     ? db.cfg.webAppUrl 
-    : "https://remarkable-sunburst-3f3466.netlify.app";
+    : "https://xovos-fuqaroai-psi.vercel.app";
 
   let msg = `🔔 <b>YANGI FUQARO QABULI! (#${newCase.id})</b>\n` +
     `━━━━━━━━━━━━━━━━━━━━\n` +

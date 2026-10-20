@@ -72,7 +72,7 @@ export function SettingsTab({ config, onUpdateConfig }) {
               value={webAppUrl}
               onChange={(e) => setWebAppUrl(e.target.value)}
               className="w-full bg-bg border border-line rounded-lg px-3 py-2 text-sm text-ink focus:outline-accent"
-              placeholder="https://remarkable-sunburst-3f3466.netlify.app"
+              placeholder="https://xovos-fuqaroai-psi.vercel.app"
             />
             <p className="text-[12px] text-muted">
               Telegram boti ichida "So'rovnoma to'ldirish" tugmasi bosilganda ochiladigan veb-havola.

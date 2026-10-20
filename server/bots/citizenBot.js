@@ -14,7 +14,7 @@ export function createCitizenBot(token, adminNotifier = null) {
   const getWebAppUrl = () => {
     const url = db.cfg.webAppUrl || process.env.WEBAPP_URL || "";
     if (url && url.startsWith("https://")) return url;
-    return "https://remarkable-sunburst-3f3466.netlify.app";
+    return "https://xovos-fuqaroai-psi.vercel.app";
   };
 
   // Main menu keyboard

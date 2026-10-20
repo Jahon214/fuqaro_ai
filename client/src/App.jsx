@@ -7,7 +7,7 @@ import { JournalView } from "./components/JournalView.jsx";
 import { CaseModal } from "./components/CaseModal.jsx";
 import { TelegramTab } from "./components/TelegramTab.jsx";
 import { SettingsTab } from "./components/SettingsTab.jsx";
-import { evaluate } from "./constants.js";
+import { evaluate, generateBuiltInAnalysis } from "./constants.js";
 import { CheckCircle2, Bot, ArrowRight } from "lucide-react";
 
 export default function App() {
@@ -55,7 +55,14 @@ export default function App() {
         fetch("/api/bots/status").then(r => r.json()).catch(() => ({ status: null }))
       ]);
 
-      if (casesRes.cases) setCases(casesRes.cases);
+      if (casesRes.cases && casesRes.cases.length > 0) {
+        setCases(casesRes.cases);
+      } else {
+        const local = localStorage.getItem("fuqaro_local_cases");
+        if (local) {
+          try { setCases(JSON.parse(local)); } catch(e) {}
+        }
+      }
       if (statsRes.stats) setStats(statsRes.stats);
       if (cfgRes.cfg) {
         setConfig(cfgRes.cfg);
@@ -74,20 +81,21 @@ export default function App() {
   // Handle Intake Form submission with instant AI analysis
   const handleIntakeSubmit = async (formData) => {
     const out = evaluate(formData, { threshold });
+    const instantAi = generateBuiltInAnalysis(formData, out, { threshold });
     
-    // Set immediate case
+    // Set immediate case with instant AI analysis
     const initialCase = {
       p: formData,
       out,
       decisions: {},
-      aiAnalysis: null,
+      aiAnalysis: instantAi,
       saved: false
     };
     setCurrentCase(initialCase);
     setCurrentView("result");
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // Request AI analysis in background
+    // Try upgrading AI analysis in background via backend Gemini (if online)
     try {
       const res = await fetch("/api/ai/analyze", {
         method: "POST",
@@ -99,7 +107,7 @@ export default function App() {
         setCurrentCase(prev => (prev ? { ...prev, aiAnalysis: data.aiAnalysis } : null));
       }
     } catch (err) {
-      console.warn("AI analysis fetch error:", err);
+      // Offline or static Vercel mode: built-in AI already active
     }
   };
 
@@ -152,6 +160,19 @@ export default function App() {
   const handleSaveCurrentCase = async () => {
     if (!currentCase) return;
 
+    // Telegram Mini App direct submission
+    if (window.Telegram?.WebApp?.sendData) {
+      try {
+        window.Telegram.WebApp.sendData(JSON.stringify({
+          ...currentCase.p,
+          decisions: currentCase.decisions,
+          source: "telegram_webapp"
+        }));
+      } catch (e) {
+        console.warn("Telegram WebApp sendData error:", e);
+      }
+    }
+
     try {
       const res = await fetch("/api/cases", {
         method: "POST",
@@ -173,11 +194,32 @@ export default function App() {
         await loadData();
         setCurrentView("log");
         window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
       }
     } catch (err) {
-      console.error("Save error:", err);
-      showToast("Qabulni saqlashda xatolik yuz berdi: " + err.message, "error");
+      console.warn("Server save error, falling back to local storage:", err);
     }
+
+    // LocalStorage fallback for standalone Vercel / offline mode
+    const newId = Date.now().toString(36);
+    const savedLocal = {
+      id: newId,
+      ts: Date.now(),
+      ...currentCase.p,
+      decisions: currentCase.decisions,
+      aiAnalysis: currentCase.aiAnalysis || generateBuiltInAnalysis(currentCase.p, currentCase.out, { threshold }),
+      recs: currentCase.out?.recs || [],
+      pc: currentCase.out?.pc
+    };
+    setCases(prev => {
+      const updated = [savedLocal, ...prev];
+      try { localStorage.setItem("fuqaro_local_cases", JSON.stringify(updated)); } catch(e){}
+      return updated;
+    });
+    showToast("Qabul muvaffaqiyatli saqlandi!", "success");
+    setCurrentCase(null);
+    setCurrentView("log");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Update decision from Modal

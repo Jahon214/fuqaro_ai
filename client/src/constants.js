@@ -299,3 +299,119 @@ export function evaluate(p, cfg = { threshold: 1000000 }) {
     poor
   };
 }
+
+/**
+ * Client-Side Smart AI Copilot Engine
+ * Generates instant AI analysis directly in the browser if backend is offline or on static Vercel
+ */
+export function generateBuiltInAnalysis(p, out, cfg = { threshold: 1000000 }) {
+  const thr = Number(cfg.threshold) || 1000000;
+  const pc = out.pc;
+  const poor = out.poor;
+  const hasChildren = p.children && p.children > 0;
+  const isJobless = p.work === "jobless";
+  const hasDebt = p.debt === "yes";
+  const isBadHousing = p.housing === "none" || p.housing === "bad" || p.housing === "rent";
+  const isDisab = p.disab && p.disab > 0;
+
+  let povertyRisk = "Past";
+  if (pc != null) {
+    if (pc < thr * 0.7) povertyRisk = "Yuqori";
+    else if (pc < thr) povertyRisk = "O'rta";
+    else povertyRisk = "Past";
+  } else if (poor || isJobless) {
+    povertyRisk = "O'rta";
+  }
+
+  let debtRisk = "Past";
+  if (hasDebt && (isJobless || poor)) {
+    debtRisk = "Yuqori";
+  } else if (hasDebt) {
+    debtRisk = "O'rta";
+  }
+
+  let priorityLevel = "O'rta";
+  if (povertyRisk === "Yuqori" || isDisab || (isJobless && hasChildren >= 3)) {
+    priorityLevel = "Yuqori";
+  } else if (povertyRisk === "Past" && !isJobless && !hasDebt) {
+    priorityLevel = "Past";
+  }
+
+  let summary = "";
+  if (povertyRisk === "Yuqori") {
+    summary = `Fuqaroning oilasida kishi boshiga daromad belgilangan mezon (${fmt(thr)} so'm) dan sezilarli darajada past bo'lib, o'tkir moddiy ko'mak va bandlik choralariga muhtoj.`;
+  } else if (isJobless) {
+    summary = `Fuqaro mehnat yoshida bo'lib, ayni paytda doimiy daromad manbaiga ega emas. Asosiy e'tiborni kasbga yo'naltirish va doimiy ish o'rniga qaratish lozim.`;
+  } else if (isDisab) {
+    summary = `Fuqaroning ${p.disab}-guruh nogironligi mavjudligi tufayli reabilitatsiya, moslashtirilgan ijtimoiy xizmatlar va tibbiy ko'rik ustuvor ahamiyatga ega.`;
+  } else {
+    summary = `Fuqaro murojaati bo'yicha umumiy holat barqaror, individual tadbirkorlik va imtiyozli kredit dasturlari orqali daromadni oshirish tavsiya etiladi.`;
+  }
+
+  const adminAdvice = [];
+  if (poor) {
+    adminAdvice.push(
+      `Fuqaroni "Ijtimoiy reestr" tizimiga kiritish uchun oilaning yashash sharoitini xatlovdan o'tkazish va moddiy yordam arizasini rasmiylashtirish.`
+    );
+  }
+  if (isJobless) {
+    adminAdvice.push(
+      `Mahalla hokim yordamchisi bilan birgalikda tumandagi mavjud bo'sh ish o'rinlari yarmarkasiga jalb qilish yoki "Ishga marhamat" monomarkaziga kasbiy kursga yo'naltirish.`
+    );
+  }
+  if (hasChildren && poor) {
+    adminAdvice.push(
+      `18 yoshgacha bo'lgan ${p.children} nafar farzand uchun bolalar nafaqasi va bog'cha to'lovlari bo'yicha imtiyozlarni tekshirib, hujjatlarni to'plashga yordam berish.`
+    );
+  }
+  if (p.type === "kredit") {
+    if (hasDebt) {
+      adminAdvice.push(
+        `Fuqaroning amaldagi qarz yukini tekshirish; yangi kredit berishdan oldin to'lov qobiliyati va qarz qoplash imkoniyatlarini bank mutaxassisi bilan hisob-kitob qilish.`
+      );
+    } else {
+      adminAdvice.push(
+        `Oilaviy tadbirkorlikni rivojlantirish dasturi (OTRD) doirasida 33 million so'mgacha imtiyozli kredit yoki subsidiya shartlarini tanishtirish.`
+      );
+    }
+  }
+  if (isBadHousing) {
+    adminAdvice.push(
+      `Uy-joy sharoiti to'g'risida mahalla yettiligining dalolatnomasini tuzish va subsidiya asosidagi arzon uy-joy dasturi navbatiga kiritish masalasini ko'rib chiqish.`
+    );
+  }
+  if (isDisab) {
+    adminAdvice.push(
+      `Inson ijtimoiy xizmatlar markazi bilan bog'lanib, bepul protez-ortopediya va reabilitatsiya vositalariga bo'lgan ehtiyojni ro'yxatga olish.`
+    );
+  }
+  if (adminAdvice.length === 0) {
+    adminAdvice.push(`Fuqaro bilan mahalla binosida yuzma-yuz suhbat o'tkazib, uning reja va ehtiyojlarini aniqlash.`);
+    adminAdvice.push(`Murojaat turi bo'yicha tegishli tuman mutaxassisi (yurist yoki bandlik xodimi) qabuliga yozdirish.`);
+  }
+
+  let recommendedAction = "Tasdiqlash";
+  let actionRationale = "Kiritilgan barcha ma'lumotlar va qoidalar mezonlariga to'liq mos keladi.";
+  if (out.missing && out.missing.length > 2) {
+    recommendedAction = "Qo'shimcha tekshirish";
+    actionRationale = `Ayrim muhim ma'lumotlar (${out.missing.join(", ")}) to'liq ko'rsatilmagan. Yakuniy qarordan oldin aniqlashtirish zarur.`;
+  }
+
+  let socialPackage = "Davlat ijtimoiy ko'mak paketi";
+  if (poor && isJobless) socialPackage = "«Ijtimoiy himoya + Bandlik» integratsiyalashgan paketi";
+  else if (p.type === "kredit") socialPackage = "«Kichik biznes va o'zini o'zi band qilish» mikromoliya paketi";
+  else if (isDisab) socialPackage = "«Inson» ijtimoiy xizmatlar va reabilitatsiya paketi";
+  else if (p.children >= 3) socialPackage = "«Ko'p bolali oilalarni qo'llab-quvvatlash» ijtimoiy yordami";
+
+  return {
+    summary,
+    povertyRisk,
+    debtRisk,
+    priorityLevel,
+    adminAdvice: adminAdvice.slice(0, 3),
+    recommendedAction,
+    actionRationale,
+    socialPackage,
+    engine: "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
+  };
+}

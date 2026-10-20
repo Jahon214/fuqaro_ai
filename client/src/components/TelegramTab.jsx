@@ -237,7 +237,7 @@ export function TelegramTab({ botStatus, onRefreshStatus }) {
               Fuqarolar boti uchun Telegram Menu Button (Mini App) o'rnatish:
             </div>
             <p className="text-muted text-xs pl-7">
-              @BotFather ga <code>/setmenubutton</code> buyrug'ini yuboring, Fuqaro botingizni tanlang va sayt havolangizni (masalan Netlify yoki ngrok havolangizni) kiriting. Endi fuqarolar botni ochganda to'g'ridan-to'g'ri ekranning pastida «So'rovnoma» tugmasi chiqadi!
+              @BotFather ga <code>/setmenubutton</code> buyrug'ini yuboring, Fuqaro botingizni (<code>@xovosfuqaro_aibot</code>) tanlang va sayt havolangizni (<code>https://xovos-fuqaroai-psi.vercel.app</code>) kiriting. Endi fuqarolar botni ochganda to'g'ridan-to'g'ri ekranning pastida «So'rovnoma» tugmasi chiqadi!
             </p>
           </div>
         </div>
