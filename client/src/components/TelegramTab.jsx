@@ -191,8 +191,8 @@ export function TelegramTab({ botStatus, onRefreshStatus }) {
             </div>
             <p className="text-muted text-xs pl-7">
               Telegramda <b>@BotFather</b> ni oching va <code>/newbot</code> buyrug'ini 2 marta bajaring:
-              <br />• 1-bot: <b>Fuqaro Boti</b> (masalan: <code>Fuqaro AI Yordamchi</code> / <code>fuqaro_ai_bot</code>)
-              <br />• 2-bot: <b>Admin Boti</b> (masalan: <code>Fuqaro AI Admin</code> / <code>fuqaro_ai_admin_bot</code>)
+              <br />• 1-bot: <b>Xovos Fuqaro Boti</b> (masalan: <code>@xovosfuqaro_aibot</code>)
+              <br />• 2-bot: <b>Admin Boti</b> (masalan: <code>@fuqaro_adminbot</code>)
             </p>
           </div>
 

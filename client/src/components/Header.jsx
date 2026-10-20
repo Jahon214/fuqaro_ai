@@ -12,12 +12,12 @@ export function Header({ currentView, setCurrentView, currentCase, totalCases, b
           {/* Brand */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white grid place-items-center font-display font-bold text-xl shadow-md shadow-emerald-500/20 shrink-0">
-              F
+              X
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-display font-bold text-ink tracking-tight">
-                  Fuqaro AI
+                  Xovos Fuqaro AI
                 </h1>
                 <span className="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500/15 to-teal-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
                   PRO v2.4
@@ -25,7 +25,7 @@ export function Header({ currentView, setCurrentView, currentCase, totalCases, b
               </div>
               <p className="text-[11px] text-muted font-medium flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                MFY va Davlat xizmatlari intellektual yordamchisi
+                Xovos tumani MFY va Davlat xizmatlari intellektual yordamchisi
               </p>
             </div>
           </div>

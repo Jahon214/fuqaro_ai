@@ -146,10 +146,10 @@ export function IntakeForm({ onSubmit, initialValues = null, threshold = 1000000
       <div className="rounded-2xl border border-line bg-surface p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-display font-bold text-ink flex items-center gap-2">
-            Fuqaro Qabuli & So'rovnomasi
+            Xovos Fuqaro Qabuli & So'rovnomasi
           </h2>
           <p className="text-xs text-muted mt-0.5">
-            Xatlov yoki sayyor qabul ma'lumotlarini kiriting. Tizim xolis tahlil qilib, MFY xodimi va fuqaro uchun eng mos dasturlarni aniqlaydi.
+            Xovos tumani MFY xatlovi yoki fuqaro so'rovnomasi. AI tizimi xolis tahlil qilib, MFY xodimi va fuqaro uchun eng mos yordam dasturlarini aniqlaydi.
           </p>
         </div>
 

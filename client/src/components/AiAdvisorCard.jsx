@@ -55,7 +55,7 @@ export function AiAdvisorCard({ aiAnalysis, onReanalyze, citizenName }) {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-display font-bold text-lg md:text-xl text-ink">
-                AI Maslahatchi (Admin / MFY xodimi uchun)
+                Xovos Fuqaro AI Maslahatchisi (Admin / MFY xodimi uchun)
               </h3>
               <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
                 <Cpu className="w-3 h-3" />

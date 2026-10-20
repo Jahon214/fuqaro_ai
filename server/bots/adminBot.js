@@ -28,8 +28,8 @@ export function createAdminBot(token) {
     const chatId = ctx.chat.id;
     ensureAdmin(chatId);
 
-    const welcome = `👋 <b>Assalomu alaykum, MFY Mas'ul Xodimi!</b>\n\n` +
-      `Siz <b>Fuqaro AI</b> tizimi admin botiga muvaffaqiyatli ulandingiz.\n` +
+    const welcome = `👋 <b>Assalomu alaykum, Xovos tumani MFY Mas'ul Xodimi!</b>\n\n` +
+      `Siz <b>Xovos Fuqaro AI</b> tizimi admin botiga muvaffaqiyatli ulandingiz.\n` +
       `Sizning Telegram ID: <code>${chatId}</code>\n\n` +
       `📥 Endi har bir yangi fuqaro so'rovnomasi to'ldirilganda, barcha ma'lumotlar va AI tavsiyalari shu yerga kelib tushadi.\n\n` +
       `<b>Mavjud buyruqlar:</b>\n` +
@@ -45,7 +45,7 @@ export function createAdminBot(token) {
   bot.command("stats", async (ctx) => {
     const stats = db.getStats();
 
-    let text = `📊 <b>Fuqaro AI — Tahliliy hisobot</b>\n\n` +
+    let text = `📊 <b>Xovos Fuqaro AI — Tahliliy hisobot</b>\n\n` +
       `📌 <b>Jami qabullar soni:</b> ${stats.total} ta\n` +
       `📈 <b>Qabulga o'rtacha tavsiya:</b> ${stats.avgRecs} ta\n` +
       `✅ <b>Xodim tasdiqlagan tavsiyalar:</b> ${stats.acceptanceRate}%\n` +
@@ -121,7 +121,7 @@ export function createAdminBot(token) {
       const inputFile = new InputFile(buffer, `fuqaro_ai_qabullar_${Date.now()}.csv`);
 
       await ctx.replyWithDocument(inputFile, {
-        caption: `📄 <b>Fuqaro AI Qabullar jurnali</b>\nJami: ${cases.length} ta yozuv`,
+        caption: `📄 <b>Xovos Fuqaro AI Qabullar jurnali</b>\nJami: ${cases.length} ta yozuv`,
         parse_mode: "HTML"
       });
     } catch (e) {
@@ -283,7 +283,7 @@ export function createAdminBot(token) {
         return ctx.reply("Ushbu qabul bo'yicha AI tahlili mavjud emas yoki yangilanmoqda.");
       }
 
-      let aiMsg = `🤖 <b>FUQARO AI — ADMIN MASLAHATCHISI (#${c.id})</b>\n\n` +
+      let aiMsg = `🤖 <b>XOVOS FUQARO AI — ADMIN MASLAHATCHISI (#${c.id})</b>\n\n` +
         `👤 <b>Fuqaro:</b> ${c.name || c.ini} (${c.age} yosh, ${c.mfy} MFY)\n` +
         `📌 <b>Murojaat turi:</b> ${TYPES[c.type] || c.type}\n\n` +
         `📊 <b>Ijtimoiy-Iqtisodiy Tahlil:</b>\n` +
@@ -302,7 +302,7 @@ export function createAdminBot(token) {
 
       aiMsg += `\n⚖️ <b>Yakuniy AI tavsiyasi:</b> <b>${ai.recommendedAction}</b>\n` +
         `<i>Asos: ${ai.actionRationale}</i>\n\n` +
-        `⚙️ <i>Tizim: ${ai.engine || "Fuqaro AI Smart Copilot"}</i>`;
+        `⚙️ <i>Tizim: ${ai.engine || "Xovos Fuqaro AI Smart Copilot"}</i>`;
 
       await ctx.reply(aiMsg, { parse_mode: "HTML" });
       return;

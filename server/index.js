@@ -265,7 +265,7 @@ if (fs.existsSync(clientDist)) {
 
 // Start server and initialize bots
 app.listen(PORT, async () => {
-  console.log(`\n🚀 Fuqaro AI Server is running at http://localhost:${PORT}`);
+  console.log(`\n🚀 Xovos Fuqaro AI Server is running at http://localhost:${PORT}`);
   console.log(`📡 API endpoints: http://localhost:${PORT}/api/cases`);
   await botManager.init();
 });

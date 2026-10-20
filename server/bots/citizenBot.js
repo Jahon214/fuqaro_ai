@@ -36,7 +36,7 @@ export function createCitizenBot(token, adminNotifier = null) {
   bot.command("start", async (ctx) => {
     const name = ctx.from?.first_name || "Fuqaro";
     const welcome = `Assalomu alaykum, <b>${name}</b>!\n\n` +
-      `🏛 <b>Fuqaro AI</b> — MFY va davlat xizmatlari bo'yicha ko'makchi platformasiga xush kelibsiz.\n\n` +
+      `🏛 <b>Xovos Fuqaro AI</b> — Xovos tumani MFY va davlat xizmatlari bo'yicha ko'makchi platformasiga xush kelibsiz.\n\n` +
       `Ushbu bot orqali siz:\n` +
       `• Bandlik va ish o'rinlari\n` +
       `• Ijtimoiy daftarlar va moddiy yordam\n` +
@@ -54,8 +54,8 @@ export function createCitizenBot(token, adminNotifier = null) {
 
   // Project Info
   bot.hears("ℹ️ Loyiha haqida", async (ctx) => {
-    const text = `🏛 <b>Fuqaro AI tizimi haqida</b>\n\n` +
-      `Ushbu platforma fuqarolarga davlat yordam dasturlari, kasbiy ta'lim, imtiyozli kreditlar va ijtimoiy xizmatlarni xolis hamda tezkorlik bilan tavsiya qilish uchun ishlab chiqilgan.\n\n` +
+    const text = `🏛 <b>Xovos Fuqaro AI tizimi haqida</b>\n\n` +
+      `Ushbu platforma Xovos tumani fuqarolariga davlat yordam dasturlari, kasbiy ta'lim, imtiyozli kreditlar va ijtimoiy xizmatlarni xolis hamda tezkorlik bilan tavsiya qilish uchun ishlab chiqilgan.\n\n` +
       `🔹 <b>Xolislik:</b> Tavsiyalar qat'iy va shaffof ijtimoiy mezonlar asosida beriladi.\n` +
       `🔹 <b>To'g'ridan-to'g'ri MFY nazorati:</b> Har bir so'rovnoma MFY xodimlariga kelib tushadi va tasdiqlanadi.\n` +
       `🔹 <b>Xavfsizlik:</b> Shaxsiy ma'lumotlar faqatgina yordam ko'rsatish maqsadida ishlatiladi.`;

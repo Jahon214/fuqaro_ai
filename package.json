@@ -1,10 +1,11 @@
 {
-  "name": "fuqaro-ai-pro",
+  "name": "xovos-fuqaro-ai",
   "version": "1.0.0",
-  "description": "Fuqaro AI - MFY xodimlari va fuqarolar uchun tavsiya tizimi va Telegram botlari",
+  "description": "Xovos Fuqaro AI - MFY xodimlari va fuqarolar uchun tavsiya tizimi va Telegram botlari",
   "main": "server/index.js",
   "type": "module",
   "scripts": {
+    "build": "npm --prefix client install && npm --prefix client run build",
     "start": "node server/index.js",
     "server": "node server/index.js",
     "client": "npm --prefix client run dev",
@@ -13,10 +14,11 @@
     "install:all": "npm install && npm --prefix client install"
   },
   "keywords": [
-    "fuqaro-ai",
+    "xovos-fuqaro-ai",
     "telegram-bot",
     "mfy",
     "mahalla",
+    "xovos",
     "uzbekistan"
   ],
   "author": "",

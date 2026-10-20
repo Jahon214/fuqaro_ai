@@ -217,6 +217,6 @@ export function generateBuiltInAnalysis(p, out, cfg) {
     recommendedAction,
     actionRationale,
     socialPackage,
-    engine: "Fuqaro AI Smart Copilot (Bepul integratsiya)"
+    engine: "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
   };
 }
