@@ -415,3 +415,147 @@ export function generateBuiltInAnalysis(p, out, cfg = { threshold: 1000000 }) {
     engine: "Xovos Fuqaro AI Smart Copilot (Bepul integratsiya)"
   };
 }
+
+/**
+ * Generate the 10 reference seed cases matching target specification
+ */
+export function generateSeedCases(threshold = 1000000) {
+  const S = [
+    ["A.K.", 34, "Ayol", "Xovosobod", "ish", { members: 5, children: 3, income: 3200000, housing: "rent", work: "jobless", edu: "college", disab: 0, debt: "no", fullName: "Aziza Karimova" }],
+    ["B.R.", 52, "Erkak", "Yettiguzar", "nogiron", { members: 4, children: 1, income: 2100000, housing: "own", work: "jobless", edu: "school", disab: 2, debt: "no", fullName: "Baxtiyor Rahimov" }],
+    ["S.T.", 27, "Ayol", "Karvonsaroy", "kredit", { members: 3, children: 1, income: 6500000, housing: "own", work: "self", edu: "uni", disab: 0, debt: "yes", fullName: "Shahnoza To'rayeva" }],
+    ["M.Y.", 71, "Ayol", "Xovosobod", "kambagal", { members: 1, children: 0, income: 900000, housing: "bad", work: "retired", edu: "school", disab: 0, debt: "no", fullName: "Mastura Yusupova" }],
+    ["J.N.", 22, "Erkak", "Bunyodkor", "talim", { members: 6, children: 2, income: 4800000, housing: "own", work: "student", edu: "school", disab: 0, debt: "no", fullName: "Javohir Nazarov" }],
+    ["D.A.", 41, "Erkak", "Yettiguzar", "ish", { members: 4, children: 2, income: 7000000, housing: "own", work: "jobless", edu: "college", disab: 0, debt: "no", fullName: "Dilshod Aliyev" }],
+    ["N.H.", 38, "Ayol", "Karvonsaroy", "kambagal", { members: 7, children: 5, income: 2600000, housing: "none", work: "home", edu: "school", disab: 0, debt: "no", fullName: "Nodira Hakimova" }],
+    ["R.Q.", 58, "Erkak", "Bunyodkor", "huquq", { members: 3, children: 0, income: 5200000, housing: "own", work: "employed", edu: "uni", disab: 0, debt: "no", fullName: "Rustam Qodirov" }],
+    ["Z.M.", 30, "Ayol", "Xovosobod", "nogiron", { members: 4, children: 2, income: 3000000, housing: "rent", work: "jobless", edu: "uni", disab: 3, debt: "no", fullName: "Zarina Mahmudova" }],
+    ["O.B.", 46, "Erkak", "Karvonsaroy", "kredit", { members: 5, children: 3, income: 5500000, housing: "own", work: "self", edu: "college", disab: 0, debt: "no", fullName: "Otabek Boboyev" }]
+  ];
+
+  const day = 86400000;
+  const now = Date.now();
+
+  return S.map((s, i) => {
+    const p = Object.assign({ age: s[1], gender: s[2], mfy: s[3], type: s[4], name: s[5].fullName }, s[5]);
+    const out = evaluate(p, { threshold });
+    const dec = {};
+
+    out.recs.forEach((r, k) => {
+      const v = (i * 7 + k * 3) % 10;
+      dec[r.id] = v < 7
+        ? { d: "ok", reason: "" }
+        : v < 9
+        ? { d: "edit", reason: "Ma'lumot yetarli emas" }
+        : { d: "no", reason: "Fuqaro xohlamadi" };
+    });
+
+    const aiAnalysis = generateBuiltInAnalysis(p, out, { threshold });
+
+    return {
+      id: "N-" + (100 + i),
+      ts: now - (i + 1) * day * 1.5,
+      ini: s[0],
+      name: s[5].fullName,
+      age: s[1],
+      gender: s[2],
+      mfy: s[3],
+      type: s[4],
+      members: s[5].members,
+      children: s[5].children,
+      income: s[5].income,
+      housing: s[5].housing,
+      work: s[5].work,
+      edu: s[5].edu,
+      disab: s[5].disab,
+      debt: s[5].debt,
+      notes: "",
+      pc: out.pc,
+      conf: out.conf,
+      poor: out.poor,
+      missing: out.missing,
+      recs: out.recs,
+      decisions: dec,
+      aiAnalysis,
+      example: true,
+      source: "seed",
+      telegramUserId: null
+    };
+  });
+}
+
+export const SEED_CASES = generateSeedCases(1000000);
+
+/**
+ * Calculate client-side statistics matching JournalView requirements 1:1
+ */
+export function calculateStats(casesList = []) {
+  const cases = casesList || [];
+  const total = cases.length;
+  const allDec = cases.flatMap(c => Object.values(c.decisions || {}));
+  const approvedDec = allDec.filter(d => d.d === "ok").length;
+  const acc = allDec.length ? Math.round((100 * approvedDec) / allDec.length) : 0;
+  const avg = total ? (cases.reduce((s, c) => s + (c.recs ? c.recs.length : 0), 0) / total).toFixed(1) : "0";
+  const exampleCount = cases.filter(c => c.example).length;
+
+  // Type distribution
+  const typeCounts = new Map();
+  cases.forEach(c => {
+    const label = TYPES[c.type] || c.type || "Boshqa";
+    const g = typeCounts.get(label) || { n: 0, recs: 0, ok: 0, dec: 0 };
+    g.n++;
+    g.recs += (c.recs ? c.recs.length : 0);
+    Object.values(c.decisions || {}).forEach(d => {
+      g.dec++;
+      if (d.d === "ok") g.ok++;
+    });
+    typeCounts.set(label, g);
+  });
+
+  const byType = [...typeCounts.entries()]
+    .map(([name, g]) => ({
+      name,
+      count: g.n,
+      recs: g.recs,
+      approvalRate: g.dec ? Math.round((100 * g.ok) / g.dec) : null
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  // Grouping stats helper
+  const groupStats = (keyFn) => {
+    const m = new Map();
+    cases.forEach(c => {
+      const k = keyFn(c) || "Ko'rsatilmagan";
+      const g = m.get(k) || { n: 0, recs: 0, ok: 0, dec: 0 };
+      g.n++;
+      g.recs += (c.recs ? c.recs.length : 0);
+      Object.values(c.decisions || {}).forEach(d => {
+        g.dec++;
+        if (d.d === "ok") g.ok++;
+      });
+      m.set(k, g);
+    });
+    return [...m.entries()]
+      .map(([group, g]) => ({
+        group,
+        count: g.n,
+        avgRecs: g.n ? (g.recs / g.n).toFixed(1) : "0",
+        approvalRate: g.dec ? Math.round((100 * g.ok) / g.dec) : null,
+        isLowSample: g.n < 5
+      }))
+      .sort((a, b) => b.count - a.count);
+  };
+
+  return {
+    total,
+    avgRecs: avg,
+    acceptanceRate: acc,
+    exampleCount,
+    byType,
+    fairness: {
+      byAge: groupStats(c => ageGroup(c.age)),
+      byGender: groupStats(c => c.gender || "Ko'rsatilmagan"),
+      byMfy: groupStats(c => c.mfy || "Ko'rsatilmagan")
+    }
+  };
+}

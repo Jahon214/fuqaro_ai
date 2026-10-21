@@ -6,7 +6,7 @@ const getAppUrl = () => {
   if (typeof window !== "undefined" && window.location?.origin && window.location.origin.startsWith("http")) {
     return window.location.origin;
   }
-  return "https://xovos-fuqaroai-psi.vercel.app";
+  return "https://fuqaroxovosai.vercel.app";
 };
 
 /**

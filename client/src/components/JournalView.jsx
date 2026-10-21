@@ -35,7 +35,7 @@ export function JournalView({
 
   const maxTypeCount = Math.max(1, ...(stats?.byType || []).map(x => x.count));
 
-  const handleShowCsv = () => {
+  const generateCsvString = () => {
     const rows = [
       ["raqam", "sana", "fuqaro_ism", "yosh", "jins", "mfy", "murojaat", "daromad", "tavsiyalar", "tasdiqlangan", "jami_qaror"]
     ];
@@ -57,10 +57,13 @@ export function JournalView({
       ]);
     });
 
-    const txt = rows
+    return rows
       .map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
       .join("\n");
+  };
 
+  const handleShowCsv = () => {
+    const txt = generateCsvString();
     setCsvText(txt);
     setShowCsvBox(true);
 
@@ -75,7 +78,15 @@ export function JournalView({
   };
 
   const handleDownloadCsv = () => {
-    window.open("/api/export/csv", "_blank");
+    const csvContent = "\uFEFF" + generateCsvString();
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `fuqaro_ai_qabullar_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleWipeClick = () => {

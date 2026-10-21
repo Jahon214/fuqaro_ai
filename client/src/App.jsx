@@ -4,7 +4,7 @@ import { IntakeForm } from "./components/IntakeForm.jsx";
 import { ResultView } from "./components/ResultView.jsx";
 import { JournalView } from "./components/JournalView.jsx";
 import { CaseModal } from "./components/CaseModal.jsx";
-import { evaluate, generateBuiltInAnalysis } from "./constants.js";
+import { evaluate, generateBuiltInAnalysis, generateSeedCases, calculateStats } from "./constants.js";
 import { sendCaseToAdminBot } from "./services/telegramNotifier.js";
 import { CheckCircle2, Bot } from "lucide-react";
 
@@ -13,7 +13,7 @@ export default function App() {
   const [currentCase, setCurrentCase] = useState(null);
   const [cases, setCases] = useState([]);
   const [stats, setStats] = useState(null);
-  const [config, setConfig] = useState({ threshold: 1000000, mfys: [], webAppUrl: "" });
+  const [config, setConfig] = useState({ threshold: 1000000, mfys: [], webAppUrl: "https://fuqaroxovosai.vercel.app" });
   const [threshold, setThreshold] = useState(1000000);
   const [botStatus, setBotStatus] = useState(null);
   const [selectedCaseForModal, setSelectedCaseForModal] = useState(null);
@@ -43,8 +43,9 @@ export default function App() {
     setTimeout(() => setToast(null), 4500);
   };
 
-  // Initial data loading from server
+  // Initial data loading from server or local seed fallback
   const loadData = async () => {
+    let currentThreshold = threshold;
     try {
       const [casesRes, statsRes, cfgRes, botRes] = await Promise.all([
         fetch("/api/cases").then(r => r.json()).catch(() => ({ cases: [] })),
@@ -53,22 +54,47 @@ export default function App() {
         fetch("/api/bots/status").then(r => r.json()).catch(() => ({ status: null }))
       ]);
 
-      if (casesRes.cases && casesRes.cases.length > 0) {
-        setCases(casesRes.cases);
+      if (cfgRes?.cfg) {
+        setConfig(cfgRes.cfg);
+        if (cfgRes.cfg.threshold) {
+          currentThreshold = cfgRes.cfg.threshold;
+          setThreshold(cfgRes.cfg.threshold);
+        }
+      }
+      if (botRes?.status) setBotStatus(botRes.status);
+
+      let loadedCases = [];
+      if (casesRes?.cases && casesRes.cases.length > 0) {
+        loadedCases = casesRes.cases;
       } else {
         const local = localStorage.getItem("fuqaro_local_cases");
         if (local) {
-          try { setCases(JSON.parse(local)); } catch(e) {}
+          try {
+            const parsed = JSON.parse(local);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              loadedCases = parsed;
+            }
+          } catch(e) {}
+        }
+        // If still empty (first time visit on Vercel), populate with the 10 reference seed cases
+        if (!loadedCases || loadedCases.length === 0) {
+          loadedCases = generateSeedCases(currentThreshold);
+          try { localStorage.setItem("fuqaro_local_cases", JSON.stringify(loadedCases)); } catch(e) {}
         }
       }
-      if (statsRes.stats) setStats(statsRes.stats);
-      if (cfgRes.cfg) {
-        setConfig(cfgRes.cfg);
-        setThreshold(cfgRes.cfg.threshold || 1000000);
+
+      setCases(loadedCases);
+
+      if (statsRes?.stats) {
+        setStats(statsRes.stats);
+      } else {
+        setStats(calculateStats(loadedCases));
       }
-      if (botRes.status) setBotStatus(botRes.status);
     } catch (err) {
-      console.error("Error loading server data:", err);
+      console.warn("Loading fallback data:", err);
+      const fallback = generateSeedCases(currentThreshold);
+      setCases(fallback);
+      setStats(calculateStats(fallback));
     }
   };
 
@@ -120,11 +146,15 @@ export default function App() {
       decisions: {},
       aiAnalysis: instantAi,
       recs: out?.recs || [],
-      pc: out?.pc
+      pc: out?.pc,
+      conf: out?.conf,
+      poor: out?.poor,
+      missing: out?.missing
     };
     setCases(prev => {
       const updated = [savedLocal, ...prev.filter(c => c.id !== newCaseId)];
       try { localStorage.setItem("fuqaro_local_cases", JSON.stringify(updated)); } catch(e){}
+      setStats(calculateStats(updated));
       return updated;
     });
 
@@ -158,10 +188,13 @@ export default function App() {
       if (data.success && data.aiAnalysis) {
         setCurrentCase(prev => ({ ...prev, aiAnalysis: data.aiAnalysis }));
         showToast("AI tahlili muvaffaqiyatli yangilandi!");
+        return;
       }
-    } catch (err) {
-      showToast("AI tahlilida xatolik: " + err.message, "error");
-    }
+    } catch (err) {}
+    // Client fallback re-analysis
+    const instantAi = generateBuiltInAnalysis(currentCase.p, currentCase.out, { threshold });
+    setCurrentCase(prev => ({ ...prev, aiAnalysis: instantAi }));
+    showToast("AI tahlili yangilandi!");
   };
 
   // Re-analyze past case from database (Modal)
@@ -175,10 +208,27 @@ export default function App() {
           setSelectedCaseForModal(data.case);
         }
         showToast("Fuqaro bo'yicha AI xulosasi generatsiya qilindi!");
+        return;
       }
-    } catch (err) {
-      showToast("Xatolik: " + err.message, "error");
-    }
+    } catch (err) {}
+    // Client fallback re-analysis
+    setCases(prev => {
+      const updated = prev.map(c => {
+        if (c.id === caseId) {
+          const evalOut = { recs: c.recs, pc: c.pc, conf: c.conf, poor: c.poor, missing: c.missing };
+          const ai = generateBuiltInAnalysis(c, evalOut, { threshold });
+          const newC = { ...c, aiAnalysis: ai };
+          if (selectedCaseForModal && selectedCaseForModal.id === caseId) {
+            setSelectedCaseForModal(newC);
+          }
+          return newC;
+        }
+        return c;
+      });
+      try { localStorage.setItem("fuqaro_local_cases", JSON.stringify(updated)); } catch(e){}
+      return updated;
+    });
+    showToast("AI xulosasi yangilandi!");
   };
 
   // Handle Decisions change in Result view
@@ -208,48 +258,39 @@ export default function App() {
     }
 
     try {
-      const res = await fetch("/api/cases", {
+      fetch("/api/cases", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...currentCase.p,
+          id: currentCase.id,
           decisions: currentCase.decisions,
           source: window.Telegram?.WebApp?.initData ? "telegram_webapp" : "web"
         })
       });
-
-      const data = await res.json();
-      if (data.success) {
-        showToast(
-          "Qabul muvaffaqiyatli saqlandi va Admin Telegram botiga AI tahlili bilan yuborildi!",
-          "success"
-        );
-        setCurrentCase(null);
-        await loadData();
-        setCurrentView("log");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        return;
-      }
-    } catch (err) {
-      console.warn("Server save error, falling back to local storage:", err);
-    }
+    } catch (err) {}
 
     // LocalStorage fallback for standalone Vercel / offline mode
-    const newId = Date.now().toString(36);
-    const savedLocal = {
-      id: newId,
-      ts: Date.now(),
+    const newCaseItem = {
+      id: currentCase.id || ("Q-" + Math.floor(1000 + Math.random() * 9000)),
+      ts: currentCase.ts || Date.now(),
       ...currentCase.p,
       decisions: currentCase.decisions,
       aiAnalysis: currentCase.aiAnalysis || generateBuiltInAnalysis(currentCase.p, currentCase.out, { threshold }),
       recs: currentCase.out?.recs || [],
-      pc: currentCase.out?.pc
+      pc: currentCase.out?.pc,
+      conf: currentCase.out?.conf,
+      poor: currentCase.out?.poor,
+      missing: currentCase.out?.missing
     };
+
     setCases(prev => {
-      const updated = [savedLocal, ...prev];
+      const updated = [newCaseItem, ...prev.filter(c => c.id !== newCaseItem.id)];
       try { localStorage.setItem("fuqaro_local_cases", JSON.stringify(updated)); } catch(e){}
+      setStats(calculateStats(updated));
       return updated;
     });
+
     showToast("Qabul muvaffaqiyatli saqlandi!", "success");
     setCurrentCase(null);
     setCurrentView("log");
@@ -259,22 +300,22 @@ export default function App() {
   // Update decision from Modal
   const handleUpdateModalDecision = async (caseId, decisions) => {
     try {
-      const res = await fetch(`/api/cases/${caseId}/decisions`, {
+      fetch(`/api/cases/${caseId}/decisions`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ decisions })
       });
-      const data = await res.json();
-      if (data.success) {
-        setCases(prev => prev.map(c => (c.id === caseId ? data.case : c)));
-        if (selectedCaseForModal && selectedCaseForModal.id === caseId) {
-          setSelectedCaseForModal(data.case);
-        }
-        await loadData();
+    } catch (err) {}
+
+    setCases(prev => {
+      const updated = prev.map(c => (c.id === caseId ? { ...c, decisions: { ...c.decisions, ...decisions } } : c));
+      try { localStorage.setItem("fuqaro_local_cases", JSON.stringify(updated)); } catch(e) {}
+      setStats(calculateStats(updated));
+      if (selectedCaseForModal && selectedCaseForModal.id === caseId) {
+        setSelectedCaseForModal(prevModal => ({ ...prevModal, decisions: { ...prevModal.decisions, ...decisions } }));
       }
-    } catch (err) {
-      console.error("Error updating decision:", err);
-    }
+      return updated;
+    });
   };
 
   // Reseed sample cases
@@ -282,31 +323,38 @@ export default function App() {
     try {
       const res = await fetch("/api/cases/reseed", { method: "POST" });
       const data = await res.json();
-      if (data.success) {
-        await loadData();
+      if (data.success && data.cases) {
+        setCases(data.cases);
+        setStats(calculateStats(data.cases));
+        try { localStorage.setItem("fuqaro_local_cases", JSON.stringify(data.cases)); } catch(e) {}
         showToast("Namuna qabullar tiklandi!");
+        return;
       }
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {}
+
+    // Standalone / Vercel fallback
+    const seeds = generateSeedCases(threshold);
+    setCases(seeds);
+    setStats(calculateStats(seeds));
+    try { localStorage.setItem("fuqaro_local_cases", JSON.stringify(seeds)); } catch(e) {}
+    showToast("Namuna qabullar tiklandi!");
   };
 
   // Wipe cases
   const handleWipe = async () => {
     try {
-      const res = await fetch("/api/cases", { method: "DELETE" });
-      const data = await res.json();
-      if (data.success) {
-        await loadData();
-        showToast("Jurnal tozalandi!");
-      }
-    } catch (err) {
-      console.error(err);
-    }
+      fetch("/api/cases", { method: "DELETE" });
+    } catch (err) {}
+
+    setCases([]);
+    setStats(calculateStats([]));
+    try { localStorage.setItem("fuqaro_local_cases", JSON.stringify([])); } catch(e) {}
+    showToast("Jurnal tozalandi!");
   };
 
   // Update config
   const handleUpdateConfig = async (updates) => {
+    if (updates.threshold != null) setThreshold(updates.threshold);
     try {
       const res = await fetch("/api/cfg", {
         method: "PUT",
@@ -316,11 +364,8 @@ export default function App() {
       const data = await res.json();
       if (data.success) {
         setConfig(data.cfg);
-        if (updates.threshold != null) setThreshold(updates.threshold);
       }
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) {}
   };
 
   return (
@@ -381,6 +426,10 @@ export default function App() {
                 onSubmit={handleIntakeSubmit}
                 initialValues={currentCase?.p}
                 threshold={threshold}
+                onUpdateThreshold={(val) => {
+                  setThreshold(val);
+                  handleUpdateConfig({ threshold: val });
+                }}
               />
             </div>
           )}

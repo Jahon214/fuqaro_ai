@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MFYS, TYPES, fmt } from "../constants.js";
 import { Sparkles, RotateCcw, Send, User, Home, Briefcase, MessageSquare, Check, AlertCircle, Calculator } from "lucide-react";
 
-export function IntakeForm({ onSubmit, initialValues = null, threshold = 1000000 }) {
+export function IntakeForm({ onSubmit, initialValues = null, threshold = 1000000, onUpdateThreshold }) {
   const [formData, setFormData] = useState({
     name: "",
     age: "",
@@ -479,6 +479,43 @@ export function IntakeForm({ onSubmit, initialValues = null, threshold = 1000000
               placeholder="Masalan: Tikuvchilik sexi ochmoqchi, subsidiya yoki imtiyozli kredit kerak..."
               className="bg-bg border border-line rounded-xl px-3.5 py-2.5 text-sm text-ink focus:outline-accent resize-y"
             />
+          </div>
+        </div>
+      </div>
+
+      {/* Qoidalar sozlamasi & Test rejimi haqida */}
+      <div className="rounded-2xl border border-line bg-surface p-5 shadow-xs space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-line">
+          <div>
+            <h3 className="font-display font-bold text-sm text-ink">Qoidalar Sozlamasi & Test Rejimi</h3>
+            <p className="text-[11px] text-muted">Mahalladagi ijtimoiy mezonlar va sinov tizimi tamoyillari</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="thr" className="text-xs font-semibold text-ink">
+              Kambag'allik chegarasi (so'm / kishi / oy)
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                id="thr"
+                type="number"
+                min="0"
+                step="50000"
+                value={threshold}
+                onChange={(e) => onUpdateThreshold && onUpdateThreshold(Number(e.target.value) || 0)}
+                className="bg-bg border border-line rounded-xl px-3.5 py-2 text-sm text-ink font-mono focus:outline-accent w-full"
+                inputMode="numeric"
+              />
+              <span className="text-xs text-muted font-mono shrink-0">UZS</span>
+            </div>
+          </div>
+
+          <div className="text-xs text-muted leading-relaxed bg-surface-raised p-3 rounded-xl border border-line/60">
+            <p>
+              <b>Test rejimi qanday ishlaydi:</b> Bu tizim MFY mas'ul xodimi (hokim yordamchisi, ijtimoiy xodim, xotin-qizlar faoli) fuqaroni qabul qilganda qaysi davlat xizmatlari mos kelishini xolis eslatib turuvchi intellektual maslahatchidir. Yakuniy qarorni har doim xodim o'zi qabul qiladi.
+            </p>
           </div>
         </div>
       </div>
