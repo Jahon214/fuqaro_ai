@@ -57,12 +57,12 @@ export async function sendCaseToAdminBot(caseData, aiAnalysis) {
 
   if (ai) {
     msg += `\n━━━━━━━━━━━━━━━━━━━━\n` +
-      `🤖 <b>XOVOS FUQARO AI MASLAHATCHISI:</b>\n` +
+      `🤖 <b>XOVOS FUQARO AI (${ai.engine || "Smart Copilot"}):</b>\n` +
       `• <b>Kambag'allik xavfi:</b> ${ai.povertyRisk || "—"}\n` +
       `• <b>Qarz tangligi:</b> ${ai.debtRisk || "—"}\n` +
       `• <b>Ustuvorlik darajasi:</b> ${ai.priorityLevel || "—"}\n` +
       `• <b>Tavsiya paketi:</b> <b>${ai.socialPackage || "Davlat ijtimoiy dasturi"}</b>\n\n` +
-      `🎯 <b>MFY xodimi (Hokim yordamchisi) uchun 3 ta qadam:</b>\n`;
+      `🎯 <b>Hokim yordamchisi / MFY xodimi uchun 3 ta qadam:</b>\n`;
 
     (ai.adminAdvice || []).forEach((adv, i) => {
       msg += `<b>${i + 1}.</b> ${adv}\n`;
