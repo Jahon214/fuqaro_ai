@@ -2,7 +2,12 @@ import { TYPES, fmt } from "../constants.js";
 
 const ADMIN_BOT_TOKEN = "8816434488:AAHnsPRhLZ7CBj3nAjIYQOonasYkoufeKMc";
 const ADMIN_CHAT_ID = "2060481412";
-const WEBAPP_URL = "https://xovos-fuqaroai-psi.vercel.app/";
+const getAppUrl = () => {
+  if (typeof window !== "undefined" && window.location?.origin && window.location.origin.startsWith("http")) {
+    return window.location.origin;
+  }
+  return "https://xovos-fuqaroai-psi.vercel.app";
+};
 
 /**
  * Sends real-time notification with full AI analysis directly to Admin Telegram Bot.
@@ -74,7 +79,7 @@ export async function sendCaseToAdminBot(caseData, aiAnalysis) {
     reply_markup: {
       inline_keyboard: [
         [
-          { text: "🌐 Vercel Web-panelda ochish", url: WEBAPP_URL }
+          { text: "🌐 Web-panelda ochish", url: getAppUrl() }
         ]
       ]
     }
