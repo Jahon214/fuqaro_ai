@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Header } from "./components/Header.jsx";
 import { IntakeForm } from "./components/IntakeForm.jsx";
 import { ResultView } from "./components/ResultView.jsx";
+import { AdminExportModal } from "./components/AdminExportModal.jsx";
 import { evaluate, generateSeedCases, calculateStats } from "./constants.js";
 import { getAiAnalysis } from "./services/aiService.js";
 import { sendCaseToAdminBot } from "./services/telegramNotifier.js";
@@ -15,6 +16,7 @@ export default function App() {
   const [config, setConfig] = useState({ threshold: 1000000, mfys: [], webAppUrl: "https://fuqaroxovosai.vercel.app" });
   const [threshold, setThreshold] = useState(1000000);
   const [toast, setToast] = useState(null);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("fuqaro_theme") || "light";
   });
@@ -30,6 +32,13 @@ export default function App() {
     }
     localStorage.setItem("fuqaro_theme", theme);
   }, [theme]);
+
+  // Check URL query parameters for direct admin access (?admin=true)
+  useEffect(() => {
+    if (window.location.search && window.location.search.toLowerCase().includes("admin")) {
+      setAdminModalOpen(true);
+    }
+  }, []);
 
   const toggleTheme = () => {
     setTheme(prev => (prev === "dark" ? "light" : "dark"));
@@ -98,7 +107,7 @@ export default function App() {
   const handleIntakeSubmit = async (formData) => {
     showToast("Sun'iy intellekt tahlil qilmoqda va xabarnoma yuborilmoqda...", "success");
 
-    // 1. Evaluate rules and run AI analysis (Gemini 1.5 Flash or Built-in Smart Copilot)
+    // 1. Evaluate rules and run AI analysis (Gemini or Built-in Copilot)
     const out = evaluate(formData, { threshold });
     const aiAnalysis = await getAiAnalysis(formData, out, { threshold });
     const newCaseId = "Q-" + Math.floor(1000 + Math.random() * 9000);
@@ -119,7 +128,29 @@ export default function App() {
     // 2. Immediately send notification with full AI analysis to Admin Telegram Bot (@fuqaro_adminbot)
     sendCaseToAdminBot(initialCase, aiAnalysis);
 
-    // 3. If inside Telegram WebApp, send data back to Telegram
+    // 3. Optional live Google Sheets webhook sync
+    const sheetWebhook = localStorage.getItem("fuqaro_google_sheet_url");
+    if (sheetWebhook && sheetWebhook.startsWith("http")) {
+      try {
+        fetch(sheetWebhook, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: newCaseId,
+            ts: new Date().toLocaleString("uz-UZ"),
+            ...formData,
+            aiSummary: aiAnalysis.summary || "",
+            povertyRisk: aiAnalysis.povertyRisk || "",
+            debtRisk: aiAnalysis.debtRisk || "",
+            socialPackage: aiAnalysis.socialPackage || "",
+            advice: (aiAnalysis.adminAdvice || []).join("; ")
+          })
+        });
+      } catch (e) {}
+    }
+
+    // 4. If inside Telegram WebApp, send data back to Telegram
     if (window.Telegram?.WebApp?.sendData) {
       try {
         window.Telegram.WebApp.sendData(JSON.stringify({
@@ -132,7 +163,7 @@ export default function App() {
       }
     }
 
-    // 4. Save to local storage for persistence
+    // 5. Save to local storage for persistence
     const savedLocal = {
       id: newCaseId,
       ts: Date.now(),
@@ -152,7 +183,7 @@ export default function App() {
 
     showToast("✅ So'rovnomangiz qabul qilindi va MFY xodimi (Admin bot)ga yuborildi!", "success");
 
-    // 5. Also forward to backend API if available
+    // 6. Also forward to backend API if available
     try {
       fetch("/api/cases", {
         method: "POST",
@@ -165,6 +196,21 @@ export default function App() {
         })
       });
     } catch (e) {}
+  };
+
+  // Reseed cases
+  const handleReseed = () => {
+    const seeds = generateSeedCases(threshold);
+    setCases(seeds);
+    try { localStorage.setItem("fuqaro_local_cases", JSON.stringify(seeds)); } catch(e){}
+    showToast("Namuna qabullar tiklandi!");
+  };
+
+  // Wipe cases
+  const handleWipe = () => {
+    setCases([]);
+    try { localStorage.setItem("fuqaro_local_cases", JSON.stringify([])); } catch(e){}
+    showToast("Arizalar ro'yxati tozalandi!");
   };
 
   // Update config
@@ -188,6 +234,7 @@ export default function App() {
           setCurrentView={setCurrentView}
           theme={theme}
           toggleTheme={toggleTheme}
+          onOpenAdmin={() => setAdminModalOpen(true)}
         />
 
         {/* Global Toast Alert */}
@@ -250,6 +297,15 @@ export default function App() {
             />
           )}
         </main>
+
+        {/* Admin Dashboard & Excel Exporter Modal */}
+        <AdminExportModal
+          isOpen={adminModalOpen}
+          onClose={() => setAdminModalOpen(false)}
+          cases={cases}
+          onReseed={handleReseed}
+          onWipe={handleWipe}
+        />
       </div>
     </div>
   );

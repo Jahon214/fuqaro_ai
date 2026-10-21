@@ -79,7 +79,10 @@ export async function sendCaseToAdminBot(caseData, aiAnalysis) {
     reply_markup: {
       inline_keyboard: [
         [
-          { text: "🌐 Web-panelda ochish", url: getAppUrl() }
+          { text: "📊 Excel (CSV)da yuklab olish", url: `${getAppUrl()}?admin=true` }
+        ],
+        [
+          { text: "🌐 So'rovnoma portalini ochish", url: getAppUrl() }
         ]
       ]
     }

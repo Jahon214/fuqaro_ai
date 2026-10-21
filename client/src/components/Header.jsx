@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Moon, Sun, FileText, CheckCircle2, Menu, X, Info, ShieldCheck, Plus } from "lucide-react";
+import { Moon, Sun, FileText, Menu, X, Info, ShieldCheck, Plus, Lock, FileSpreadsheet } from "lucide-react";
 
-export function Header({ currentView, setCurrentView, theme, toggleTheme }) {
+export function Header({ currentView, setCurrentView, theme, toggleTheme, onOpenAdmin }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
@@ -53,8 +53,18 @@ export function Header({ currentView, setCurrentView, theme, toggleTheme }) {
               )}
             </div>
 
-            {/* Right Action Icons: Theme Toggle & Menu */}
+            {/* Right Action Icons: Admin, Theme Toggle & Menu */}
             <div className="flex items-center gap-2">
+              {/* Admin Panel Button */}
+              <button
+                onClick={onOpenAdmin}
+                className="w-9 h-9 rounded-xl border border-line bg-surface hover:bg-surface-raised text-muted hover:text-accent grid place-items-center transition cursor-pointer shadow-xs"
+                title="MFY Admin Paneli (Excel & Baza yuklab olish)"
+                aria-label="Admin panel"
+              >
+                <Lock className="w-4 h-4 text-accent" />
+              </button>
+
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
@@ -91,7 +101,21 @@ export function Header({ currentView, setCurrentView, theme, toggleTheme }) {
                     <FileText className="w-4 h-4 text-accent" />
                     So'rovnoma to'ldirish
                   </span>
-                  <span className="text-[11px] opacity-70">MFY qabuli</span>
+                  <span className="text-[11px] opacity-70">Fuqaro arizasi</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    onOpenAdmin();
+                  }}
+                  className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition cursor-pointer hover:bg-surface-raised text-ink"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    MFY Admin Paneli (Excel yuklab olish)
+                  </span>
+                  <span className="text-[11px] font-mono text-accent font-bold">PIN: 2060</span>
                 </button>
 
                 <button

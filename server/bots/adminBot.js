@@ -100,42 +100,85 @@ export function createAdminBot(token) {
     await ctx.reply(text, { parse_mode: "HTML" });
   });
 
-  // /export command: sends CSV file
-  bot.command("export", async (ctx) => {
+  // /export and /excel commands: sends rich CSV/Excel file
+  bot.command(["export", "excel"], async (ctx) => {
     try {
       const cases = db.getAllCases();
-      const rows = [["raqam", "sana", "fuqaro_ism", "yosh", "jins", "mfy", "murojaat", "daromad", "tavsiyalar_soni", "tasdiqlangan"]];
+      const headers = [
+        "№",
+        "Ariza ID",
+        "Sana va vaqt",
+        "Fuqaro F.I.Sh.",
+        "Yoshi",
+        "Jinsi",
+        "Mahalla (MFY)",
+        "Murojaat yo'nalishi",
+        "Oila a'zolari",
+        "18 yoshgacha bolalar",
+        "Oylik daromad (so'm)",
+        "Kishi boshiga daromad (so'm)",
+        "Uy-joy",
+        "Bandlik",
+        "Nogironlik",
+        "Qarz",
+        "Fuqaro izohi",
+        "AI: Kambag'allik xavfi",
+        "AI: Qarz tangligi",
+        "AI: Tavsiya paketi",
+        "AI: MFY xodimi uchun 3 ta qadam"
+      ];
 
-      cases.forEach(c => {
-        const ds = Object.values(c.decisions || {});
+      const rows = [headers];
+
+      cases.forEach((c, idx) => {
+        const p = c.p || c;
+        const ai = c.aiAnalysis || {};
+        const pc = p.income != null && p.members ? Math.round(p.income / p.members) : (c.pc || "");
+        const steps = Array.isArray(ai.adminAdvice)
+          ? ai.adminAdvice.map((s, i) => `${i + 1}) ${s}`).join(" | ")
+          : "";
+
         rows.push([
-          c.id,
-          new Date(c.ts).toISOString().slice(0, 10),
-          c.name || c.ini,
-          c.age,
-          c.gender || "",
-          c.mfy,
-          TYPES[c.type] || c.type,
-          c.income || 0,
-          (c.recs || []).length,
-          ds.filter(d => d.d === "ok").length
+          idx + 1,
+          c.id || `Q-${idx + 100}`,
+          new Date(c.ts || Date.now()).toLocaleString("uz-UZ"),
+          p.name || p.ini || "Noma'lum",
+          p.age != null ? p.age : "",
+          p.gender || "",
+          p.mfy || "",
+          TYPES[p.type] || p.type || "",
+          p.members != null ? p.members : 1,
+          p.children != null ? p.children : 0,
+          p.income != null ? p.income : 0,
+          pc,
+          p.housing || "",
+          p.work || "",
+          p.disab ? `${p.disab}-guruh` : "Yo'q",
+          p.debt === "yes" ? "Bor" : "Yo'q",
+          p.notes ? p.notes.replace(/\r?\n/g, " ") : "",
+          ai.povertyRisk || "—",
+          ai.debtRisk || "—",
+          ai.socialPackage || "Davlat paketi",
+          steps
         ]);
       });
 
       const csvContent = rows
-        .map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
-        .join("\n");
+        .map(r => r.map(v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`).join(","))
+        .join("\r\n");
 
-      const buffer = Buffer.from("\uFEFF" + csvContent, "utf-8"); // UTF-8 BOM for Excel
-      const inputFile = new InputFile(buffer, `fuqaro_ai_qabullar_${Date.now()}.csv`);
+      const buffer = Buffer.from("\uFEFF" + csvContent, "utf-8"); // UTF-8 BOM for Microsoft Excel
+      const inputFile = new InputFile(buffer, `xovos_fuqaro_qabullar_${Date.now()}.csv`);
 
       await ctx.replyWithDocument(inputFile, {
-        caption: `📄 <b>Xovos Fuqaro AI Qabullar jurnali</b>\nJami: ${cases.length} ta yozuv`,
+        caption: `📊 <b>Xovos Fuqaro AI — Qabullar jurnali (Excel jadvali)</b>\n\n` +
+          `📌 <b>Jami arizalar soni:</b> ${cases.length} ta\n` +
+          `ℹ️ <i>Ushbu faylni to'g'ridan-to'g'ri Microsoft Excel dasturida ochishingiz mumkin.</i>`,
         parse_mode: "HTML"
       });
     } catch (e) {
       console.error("Export error in admin bot:", e);
-      await ctx.reply("CSV faylni eksport qilishda xatolik yuz berdi.");
+      await ctx.reply("Excel faylni eksport qilishda xatolik yuz berdi.");
     }
   });
 
