@@ -1,20 +1,81 @@
 export const MFYS = [
-  "Xovosobod",
-  "Yettiguzar",
-  "Karvonsaroy",
-  "Bunyodkor",
-  "Boshqa MFY"
+  "Chamanzor MFY",
+  "Istiqlol MFY",
+  "Do‘stlik MFY",
+  "Tinchlik MFY",
+  "Karvonsaroy MFY",
+  "Yetti guzar MFY",
+  "Bunyodkor MFY",
+  "Farhod MFY",
+  "Obod turmush MFY",
+  "Gulbahor SHFY",
+  "Mustaqillikning 25 yilligi MFY",
+  "Sohibkor QFY",
+  "Sharqobod MFY",
+  "Qayirma MFY",
+  "Qora kum MFY",
+  "Paxtakor QFY",
+  "Oqchangal MFY",
+  "Afrosiyob MFY",
+  "O‘zb.to‘qimachiligi MFY",
+  "Xovosobod MFY",
+  "Yangiyer MFY",
+  "Mustaqillik MFY",
+  "Xusnobod MFY",
+  "Qahramon MFY",
+  "Bo‘ston MFY",
+  "Binokor QFY",
+  "Boshqa hudud"
 ];
 
 export const TYPES = {
-  ish: "Ish so'rab keldi",
-  kambagal: "Kambag'allik / ijtimoiy yordam",
-  nogiron: "Nogironlik bilan bog'liq",
-  kredit: "Kredit olmoqchi",
-  talim: "Ta'lim",
-  uy: "Uy-joy",
-  huquq: "Huquqiy maslahat",
-  boshqa: "Boshqa"
+  davlat_idoralari: "Davlat va xo‘jalik idoralari ishlari",
+  hokimiyat_ishlari: "Hokimiyat idoralarining ishlari",
+  moliya_soliq_bojxona: "Moliya, soliq va bojxona masalasi",
+  bank_kredit: "Bank, kredit masalalari",
+  ish_bandlik: "Ish, ish haqi va imtiyozlar",
+  nafaqa: "Nafaqa masalalari",
+  moddiy_yordam: "Moddiy yordam masalalari",
+  korxona_xususiylashtirish: "Korxona faoliyati va xususiylashtirish masalasi",
+  tashqi_iqtisodiy: "Tashqi iqtisodiy aloqalar masalasi",
+  tadbirkorlik: "Tadbirkorlikni rivojlantirish masalasi",
+  fermer_xojalik: "Fermer xo‘jaliklari masalalari",
+  agrosanoat: "Agrosanoat infrastrukturasi masalasi",
+  istemol_tovarlar: "Iste’mol tovarlari ishlab chiqarish masalasi",
+  bozor_savdo: "Bozor va savdo sohalari",
+  uy_joy_yer: "Uy-joy va yer olish masalalari",
+  uylarni_tamirlash: "Uylarni ta’mirlash masalalari",
+  kommunal_xizmat: "Kommunal-xizmat sohasi",
+  obodonlashtirish: "Obodonlashtirish masalalari",
+  shirkat_uyjoy: "Xususiy uy-joy mulkdorlari shirkati",
+  qurilish: "Qurilish masalalari",
+  elektr_gaz: "Elektrlashtirish va gazlashtirish",
+  transport: "Transport masalalari",
+  yoqilgi_energetika: "Yoqilg‘i-energetika sohalari",
+  mashinasozlik: "Mashinasozlik, avtomobil sanoati masalasi",
+  xalq_talimi: "Xalq ta’limi masalalari",
+  oliy_talim: "Oliy va o‘rta maxsus ta’lim",
+  sogliqni_saqlash: "Sog‘liqni saqlash sohasi",
+  madaniyat_sanat: "Madaniyat, matbuot va san’at ishlari",
+  din_masalalari: "Din masalalari",
+  mahalla_qfy: "Mahalla va QFY masalalari",
+  oila_masalalari: "Oila masalalari",
+  aloqa_it: "Aloqa va axborot texnologiyasi",
+  sud: "Sud masalalari",
+  prokuratura: "Prokuratura masalalari",
+  adliya: "Adliya masalalari",
+  ichki_ishlar: "Ichki ishlar masalalari",
+  mudofaa: "Mudofaa masalalari",
+  turli: "Turli masalalar",
+  // Legacy aliases for backward compatibility
+  ish: "Ish, ish haqi va imtiyozlar",
+  kambagal: "Moddiy yordam masalalari",
+  nogiron: "Sog‘liqni saqlash sohasi",
+  kredit: "Bank, kredit masalalari",
+  talim: "Xalq ta’limi masalalari",
+  uy: "Uy-joy va yer olish masalalari",
+  huquq: "Adliya masalalari",
+  boshqa: "Turli masalalar"
 };
 
 export const REJECT_REASONS = [
@@ -71,13 +132,23 @@ export function evaluate(p, cfg = { threshold: 1000000 }) {
   const working = p.age != null && p.age >= 18 && p.age <= 60;
   const pcTxt = pc != null ? `kishi boshiga oyiga ${fmt(pc)} so'm` : "";
 
+  const t = String(p.type || "").toLowerCase();
+  const isIsh = t === "ish" || t === "ish_bandlik" || t.includes("ish") || t.includes("bandlik");
+  const isKredit = t === "kredit" || t === "bank_kredit" || t === "tadbirkorlik" || t === "fermer_xojalik" || t.includes("kredit") || t.includes("bank") || t.includes("tadbirkorlik") || t.includes("fermer");
+  const isUy = t === "uy" || t === "uy_joy_yer" || t === "uylarni_tamirlash" || t === "shirkat_uyjoy" || t.includes("uy-joy") || t.includes("uylar") || t.includes("shirkati");
+  const isTalim = t === "talim" || t === "xalq_talimi" || t === "oliy_talim" || t.includes("ta’lim") || t.includes("talim");
+  const isHuquq = t === "huquq" || t === "sud" || t === "prokuratura" || t === "adliya" || t === "ichki_ishlar" || t.includes("sud") || t.includes("adliya") || t.includes("prokuratura") || t.includes("ichki ishlar");
+  const isKommunal = t === "kommunal_xizmat" || t === "elektr_gaz" || t === "yoqilgi_energetika" || t.includes("kommunal") || t.includes("elektr") || t.includes("yoqilg‘i");
+  const isSogliq = t === "nogiron" || t === "sogliqni_saqlash" || t.includes("sog‘liq") || t.includes("nogiron");
+  const isModdiy = t === "kambagal" || t === "moddiy_yordam" || t === "nafaqa" || t.includes("moddiy") || t.includes("nafaqa");
+
   // 1. Bandlik
   if (p.work === "jobless" && adult && p.age <= 65) {
     add(
       "bandlik",
       "Bandlik xizmatida ro'yxatdan o'tish va ish tanlash",
-      p.type === "ish" ? 3 : 2,
-      ["Fuqaro ishsiz va mehnat yoshida"].concat(p.type === "ish" ? ["Murojaat sababi: ish qidirish"] : []),
+      isIsh ? 3 : 2,
+      ["Fuqaro ishsiz va mehnat yoshida"].concat(isIsh ? ["Murojaat sababi: ish va bandlik masalasi"] : []),
       ["Pasport", "Mehnat daftarchasi yoki ish tajribasi haqida ma'lumot", "Ta'lim hujjati (bo'lsa)"],
       "Tumanning bandlik markazi yoki mahalla yettiligi",
       ["Hujjatlarni tayyorlash", "Bandlik markazida ro'yxatdan o'tish", "Mos bo'sh o'rinlar ro'yxatini olish"]
@@ -98,11 +169,11 @@ export function evaluate(p, cfg = { threshold: 1000000 }) {
   }
 
   // 3. Tadbirkorlik
-  if (working && (p.type === "ish" || p.type === "kredit" || p.work === "jobless" || p.work === "home")) {
+  if (working && (isIsh || isKredit || p.work === "jobless" || p.work === "home")) {
     add(
       "tadbirkor",
       "O'zini o'zi band qilish va kichik tadbirkorlik bo'yicha maslahat",
-      p.type === "kredit" || p.type === "ish" ? 2 : 1,
+      isKredit || isIsh ? 2 : 1,
       ["Mehnat yoshida", "Murojaat ish yoki mablag' bilan bog'liq yoki fuqaro hozir bandligi yo'q"],
       ["Pasport", "Qisqa biznes-g'oya (1 sahifa)"],
       "Mahalla yettiligi, tadbirkorlikni qo'llab-quvvatlash markazi",
@@ -188,7 +259,7 @@ export function evaluate(p, cfg = { threshold: 1000000 }) {
   }
 
   // 9. Kredit
-  if (p.type === "kredit") {
+  if (isKredit) {
     if (p.debt === "yes") {
       add(
         "qarz",
@@ -212,7 +283,7 @@ export function evaluate(p, cfg = { threshold: 1000000 }) {
   }
 
   // 10. Uy-joy
-  if (p.housing === "none" || p.housing === "bad" || p.type === "uy") {
+  if (p.housing === "none" || p.housing === "bad" || isUy) {
     add(
       "uy",
       "Uy-joy dasturlari bo'yicha ro'yxatga olish va maslahat",
@@ -225,12 +296,12 @@ export function evaluate(p, cfg = { threshold: 1000000 }) {
   }
 
   // 11. Ta'lim
-  if (p.type === "talim" && p.age != null && p.age <= 30) {
+  if (isTalim && p.age != null && p.age <= 35) {
     add(
       "talim",
       "Ta'lim imkoniyatlari: grant, kontrakt, stipendiya bo'yicha maslahat",
       2,
-      ["Murojaat ta'lim bilan bog'liq", "Yoshi 30 dan oshmagan"],
+      ["Murojaat ta'lim bilan bog'liq", "Ta'lim dasturlaridan foydalanish yoshida"],
       ["Pasport", "Ta'lim hujjati", "Test natijasi (bo'lsa)"],
       "Yoshlar yetakchisi, ta'lim bo'limi",
       ["Ta'lim yo'nalishini aniqlash", "Qabul va moliyalashtirish shartlarini tekshirish"]
@@ -238,15 +309,28 @@ export function evaluate(p, cfg = { threshold: 1000000 }) {
   }
 
   // 12. Huquq
-  if (p.type === "huquq") {
+  if (isHuquq) {
     add(
       "huquq",
       "Huquqiy maslahatga yo'naltirish",
       2,
-      ["Murojaat huquqiy masala bo'yicha"],
+      ["Murojaat huquqiy, sud yoki adliya masalalari bo'yicha"],
       ["Masalaga oid hujjatlar nusxasi"],
       "Mahalla huquqiy maslahatchisi yoki tuman yuridik xizmati",
       ["Muammoni qisqa yozib olish", "Mutaxassis qabuliga yozdirish"]
+    );
+  }
+
+  // 13. Kommunal
+  if (isKommunal) {
+    add(
+      "kommunal",
+      "Kommunal va muhandislik xizmatlari bo'yicha amaliy yordam",
+      2,
+      ["Murojaat elektr, gaz, suv yoki infratuzilma bilan bog'liq"],
+      ["Pasport", "Hisoblagich yoki shartnoma ma'lumoti"],
+      "Mahalla yettiligi, tuman kommunal xizmatlari",
+      ["Muammoni joyida o'rganish", "Tegishli soha mutaxassisini jalb qilish"]
     );
   }
 
