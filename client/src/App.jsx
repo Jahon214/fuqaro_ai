@@ -387,7 +387,7 @@ export default function App() {
 
   return (
     <div className="app" id="app">
-      {/* Top Bar */}
+      {/* Top Bar with Imperial Emerald Palette */}
       <header className="bar pad">
         <div className="logo" aria-hidden="true">F</div>
         <div>
@@ -632,7 +632,7 @@ export default function App() {
 
               {/* Error Alert */}
               {formError && (
-                <div className="p-3 rounded-xl bg-[var(--crit-bg)] border border-[var(--crit-border)] text-[var(--crit)] text-[13px] font-semibold flex items-center gap-2 mt-3 animate-shake">
+                <div className="p-3 rounded-xl bg-[var(--crit-bg)] border border-[var(--crit-border)] text-[var(--crit)] text-[13px] font-semibold flex items-center gap-2 mt-3">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 flex-none">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="12" y1="8" x2="12" y2="12" />
@@ -642,7 +642,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* Navigation Buttons */}
+              {/* Navigation Buttons (Full Width) */}
               <div className="flex gap-2.5 mt-5">
                 {step > 1 && (
                   <button
@@ -681,17 +681,17 @@ export default function App() {
               </div>
             </form>
 
-            {/* Demo Button */}
+            {/* Demo Button - Centered Full Width */}
             <button
               type="button"
-              className="py-2.5 px-3.5 rounded-xl border border-[var(--line)] bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] text-xs font-semibold flex items-center gap-1.5 self-start shadow-sm transition-all active:scale-95"
+              className="w-full py-3 px-4 rounded-xl border border-dashed border-[var(--line)] bg-[var(--surface)] hover:bg-[var(--soft)] text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] text-xs font-semibold flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98]"
               id="demo"
               onClick={handleFillDemo}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-[var(--accent)]">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[var(--accent)]">
                 <path d="M15 4V2 M15 16v-2 M8 9h2 M20 9h2 M17.8 11.8L19 13 M15 9h0 M17.8 6.2L19 5 M3 21l9-9" />
               </svg>
-              Namuna bilan to'ldirish (Demo)
+              <span>Namuna bilan to'ldirish (Tezkor Demo)</span>
             </button>
           </section>
         )}
@@ -700,23 +700,30 @@ export default function App() {
         {view === "result" && (
           <section className="screen" id="s-result" aria-label="Tahlil">
             {!cur ? (
-              <div className="card-pro text-center py-12 px-4">
-                <div className="w-16 h-16 rounded-2xl bg-[var(--soft)] text-[var(--accent)] border border-[var(--soft-border)] mx-auto flex items-center justify-center mb-4">
+              /* Centered empty state card with full-width centered button */
+              <div className="card-pro text-center py-12 px-5 flex flex-col items-center">
+                <div className="w-16 h-16 rounded-2xl bg-[var(--soft)] text-[var(--accent)] border border-[var(--soft-border)] flex items-center justify-center mb-4 shadow-sm">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
                     <circle cx="12" cy="12" r="9" />
                     <path d="M9 12l2 2 4-4" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold mb-1">Hozircha tahlil yo'q</h3>
-                <p className="text-[var(--muted)] text-sm max-w-xs mx-auto mb-5">
+                <h3 className="text-lg font-bold mb-1.5">Hozircha tahlil yo'q</h3>
+                <p className="text-[var(--muted)] text-sm max-w-xs mx-auto mb-6 leading-relaxed">
                   Fuqaroni qabul qilish va AI xulosasini ko'rish uchun «Qabul» bo'limida shaklni to'ldiring.
                 </p>
-                <button
-                  onClick={() => goToView("form")}
-                  className="btn-pro btn-primary-pro inline-flex py-2 px-5 text-sm"
-                >
-                  Qabulga o'tish
-                </button>
+                <div className="w-full max-w-xs">
+                  <button
+                    onClick={() => goToView("form")}
+                    className="btn-pro btn-primary-pro w-full py-3.5 px-6 text-sm font-bold shadow-md"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4">
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    <span>Qabulga o'tish</span>
+                  </button>
+                </div>
               </div>
             ) : (
               <>
@@ -819,7 +826,7 @@ export default function App() {
                       </span>
                     </div>
 
-                    {/* Action Buttons */}
+                    {/* Action Buttons (Full Width) */}
                     <div className="flex gap-2.5 pt-1">
                       <button
                         className="btn-pro btn-primary-pro flex-1"
@@ -867,23 +874,30 @@ export default function App() {
         {view === "hist" && (
           <section className="screen" id="s-hist" aria-label="Tarix">
             {hist.length === 0 ? (
-              <div className="card-pro text-center py-12 px-4">
-                <div className="w-16 h-16 rounded-2xl bg-[var(--soft)] text-[var(--accent)] border border-[var(--soft-border)] mx-auto flex items-center justify-center mb-4">
+              /* Centered empty state card with full-width centered button */
+              <div className="card-pro text-center py-12 px-5 flex flex-col items-center">
+                <div className="w-16 h-16 rounded-2xl bg-[var(--soft)] text-[var(--accent)] border border-[var(--soft-border)] flex items-center justify-center mb-4 shadow-sm">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
                     <circle cx="12" cy="12" r="9" />
                     <polyline points="12 6 12 12 16 14" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold mb-1">Tarix hozircha bo'sh</h3>
-                <p className="text-[var(--muted)] text-sm max-w-xs mx-auto mb-5">
+                <h3 className="text-lg font-bold mb-1.5">Tarix hozircha bo'sh</h3>
+                <p className="text-[var(--muted)] text-sm max-w-xs mx-auto mb-6 leading-relaxed">
                   Qabul qilingan fuqarolar tahlili shu yerda avtomatik saqlanib boradi.
                 </p>
-                <button
-                  onClick={() => goToView("form")}
-                  className="btn-pro btn-primary-pro inline-flex py-2 px-5 text-sm"
-                >
-                  Yangi qabul boshlash
-                </button>
+                <div className="w-full max-w-xs">
+                  <button
+                    onClick={() => goToView("form")}
+                    className="btn-pro btn-primary-pro w-full py-3.5 px-6 text-sm font-bold shadow-md"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4">
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    <span>Yangi qabul boshlash</span>
+                  </button>
+                </div>
               </div>
             ) : (
               <>
@@ -893,7 +907,7 @@ export default function App() {
                     <span className="w-2 h-2 rounded-full bg-[var(--accent)]"></span>
                     <span className="text-xs font-semibold">Qurilmada saqlangan qabullar</span>
                   </div>
-                  <span className="text-xs font-bold text-[var(--accent)] px-2 py-0.5 rounded-full bg-[var(--surface)] border border-[var(--line)]">
+                  <span className="text-xs font-bold text-[var(--accent)] px-2.5 py-0.5 rounded-full bg-[var(--surface)] border border-[var(--line)]">
                     {hist.length} ta yozuv
                   </span>
                 </div>
@@ -960,9 +974,8 @@ export default function App() {
                 <div className="pt-2">
                   <button
                     type="button"
-                    className={wipeConfirm ? "btn-pro btn-danger-pro w-full text-xs" : "btn-pro btn-ghost-pro text-xs py-2 px-3 border-[var(--line)] text-[var(--muted)] hover:text-[var(--crit)] hover:border-[var(--crit)]"}
+                    className={wipeConfirm ? "btn-pro btn-danger-pro w-full text-xs" : "w-full py-2.5 px-3 rounded-xl border border-[var(--line)] bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--crit)] hover:border-[var(--crit)] text-xs font-medium transition-colors"}
                     id="wipe"
-                    style={{ alignSelf: "flex-start" }}
                     onClick={handleWipeHistory}
                   >
                     {wipeConfirm ? "Aniq tozalansinmi? Tasdiqlash uchun yana bosing" : "Tarixni tozalash"}
