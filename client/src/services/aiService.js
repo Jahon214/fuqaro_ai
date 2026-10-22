@@ -75,7 +75,7 @@ export async function runAiAnalysis(citizenData, abortSignal) {
     getFallbackKey();
 
   if (geminiApiKey && geminiApiKey.length > 20) {
-    const models = ["gemini-3.5-flash-lite", "gemini-flash-latest", "gemini-3.5-flash"];
+    const models = ["gemini-1.5-flash", "gemini-3.5-flash-lite", "gemini-flash-latest", "gemini-3.5-flash"];
     for (const model of models) {
       try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiApiKey}`;
