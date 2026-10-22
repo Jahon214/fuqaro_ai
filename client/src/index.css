@@ -128,28 +128,51 @@ button {
   outline-offset: 2px;
 }
 
-/* App container */
+/* Responsive App Container */
 .app {
   min-height: 100vh;
-  max-width: 480px;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   background: var(--bg);
   position: relative;
-  box-shadow: 0 0 60px rgba(0, 0, 0, 0.06);
 }
 
-@media (min-width: 520px) {
+/* Mobile: max 480px */
+@media (max-width: 767px) {
   .app {
+    max-width: 480px;
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.06);
+  }
+}
+
+/* Desktop & Tablet: Expands gracefully */
+@media (min-width: 768px) {
+  .app {
+    max-width: 1080px;
     border-inline: 1px solid var(--line);
     min-height: 100vh;
+    box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.07);
+  }
+}
+
+@media (min-width: 1200px) {
+  .app {
+    max-width: 1180px;
   }
 }
 
 .pad {
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+@media (min-width: 768px) {
+  .pad {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
 }
 
 /* Top bar with prestigious Emerald Gradient */
@@ -248,8 +271,14 @@ main.main-content {
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-block: 16px 24px;
+  padding-block: 16px 28px;
   -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 768px) {
+  main.main-content {
+    padding-block: 24px 36px;
+  }
 }
 
 .screen {
@@ -315,6 +344,13 @@ main.main-content {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+@media (min-width: 768px) {
+  .card-pro {
+    padding: 24px;
+    border-radius: 20px;
+  }
+}
+
 .card-pro:focus-within {
   border-color: var(--accent);
   box-shadow: var(--shadow-glow);
@@ -371,6 +407,13 @@ textarea.input-pro {
   display: grid;
   grid-template-columns: 110px minmax(0, 1fr);
   gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .row2 {
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: 16px;
+  }
 }
 
 /* Fieldset chips */
@@ -447,7 +490,7 @@ fieldset.fset-pro legend {
   font-size: 13.5px;
   line-height: 1.45;
   cursor: pointer;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: 12px;
   background: var(--bg-subtle);
   border: 1px solid var(--line);
@@ -553,17 +596,25 @@ fieldset.fset-pro legend {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 16px;
-  padding: 16px 18px;
+  padding: 18px 20px;
   box-shadow: var(--shadow-sm);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .sec-card {
+    border-radius: 18px;
+  }
 }
 
 .sec-head {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .sec-ic {
@@ -594,6 +645,7 @@ fieldset.fset-pro legend {
   font-size: 14.5px;
   line-height: 1.6;
   color: var(--ink);
+  flex: 1;
 }
 
 .sec-body p {
@@ -629,11 +681,11 @@ fieldset.fset-pro legend {
   border: 1px solid var(--warn-border);
   color: var(--warn);
   border-radius: 12px;
-  padding: 11px 14px;
+  padding: 12px 16px;
   font-size: 13px;
   line-height: 1.45;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: flex-start;
 }
 
@@ -662,7 +714,7 @@ fieldset.fset-pro legend {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 14px;
-  padding: 12px 14px;
+  padding: 14px 16px;
   min-height: 64px;
   cursor: pointer;
   transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
@@ -703,7 +755,7 @@ fieldset.fset-pro legend {
   text-overflow: ellipsis;
 }
 
-/* Bottom Tab Navigation Dock - NO UGLY OUTLINE BOXES */
+/* Bottom Tab Navigation Dock - Mobile only */
 .tabs-dock {
   flex: none;
   display: grid;
@@ -767,8 +819,8 @@ fieldset.fset-pro legend {
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
