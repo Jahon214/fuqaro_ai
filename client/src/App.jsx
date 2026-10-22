@@ -6,52 +6,58 @@ import { downloadCsv, downloadExcel, parseSections } from "./services/excelExpor
 const STORAGE_KEY = "fuqaroai.mobile.v1";
 const THEME_KEY = "fuqaro_theme";
 
-const ICONS = [
-  // Document
-  <path key="0" d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z M14 3v5h5M9 13h6M9 17h4" />,
-  // Warning triangle
-  <path key="1" d="M12 3l9 16H3z M12 10v4M12 17h.01" />,
-  // Steps / Roadmap
-  <g key="2"><circle cx="6" cy="19" r="2" /><circle cx="18" cy="5" r="2" /><path d="M8 19h6a3 3 0 000-6h-4a3 3 0 010-6h6" /></g>,
-  // Alternative / Swap
-  <path key="3" d="M7 7h11l-3-3M17 17H6l3 3" />
+// Section Icons
+const SECTION_ICONS = [
+  // 0: Summary / Document
+  <path key="0" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8" />,
+  // 1: Risk & Opportunity / Shield
+  <path key="1" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z M12 8v4 M12 16h.01" />,
+  // 2: Steps / Action List
+  <g key="2"><polyline points="9 11 12 14 22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></g>,
+  // 3: Alternative / Lightbulb
+  <path key="3" d="M9 18h6 M10 22h4 M12 2a7 7 0 0 0-7 7c0 2.5 1.5 4.5 3 6h8c1.5-1.5 3-3.5 3-6a7 7 0 0 0-7-7z" />
 ];
 
 function getSectionIcon(i) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {ICONS[i % ICONS.length]}
+      {SECTION_ICONS[i % SECTION_ICONS.length]}
     </svg>
   );
 }
 
-// Markdown helper to render formatted text with strong, em, and lists
+// Markdown blocks parser for AI result text
 function renderMarkdownBlocks(text = "") {
   const inline = (s) => {
     return s
-      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong class='font-bold text-[var(--ink)]'>$1</strong>")
       .replace(/(^|[^*])\*([^*\s][^*]*)\*/g, "$1<em>$2</em>");
   };
 
   const lines = text.split("\n");
   const elements = [];
-  let currentList = null; // { type: 'ul' | 'ol', items: [] }
+  let currentList = null;
 
   const flushList = (key) => {
     if (currentList) {
       if (currentList.type === "ul") {
         elements.push(
-          <ul key={`ul-${key}`} className="list-disc pl-5 my-2 space-y-1">
+          <ul key={`ul-${key}`} className="my-2.5 space-y-1.5 pl-5 list-disc">
             {currentList.items.map((item, idx) => (
-              <li key={idx} dangerouslySetInnerHTML={{ __html: inline(item) }} />
+              <li key={idx} className="leading-relaxed" dangerouslySetInnerHTML={{ __html: inline(item) }} />
             ))}
           </ul>
         );
       } else {
         elements.push(
-          <ol key={`ol-${key}`} className="list-decimal pl-5 my-2 space-y-1">
+          <ol key={`ol-${key}`} className="my-2.5 space-y-2 pl-1 list-none">
             {currentList.items.map((item, idx) => (
-              <li key={idx} dangerouslySetInnerHTML={{ __html: inline(item) }} />
+              <li key={idx} className="flex gap-2.5 items-start leading-relaxed">
+                <span className="w-5 h-5 rounded-full bg-[var(--soft)] border border-[var(--soft-border)] text-[var(--accent)] font-bold text-[11px] flex items-center justify-center flex-none mt-0.5">
+                  {idx + 1}
+                </span>
+                <span className="flex-1" dangerouslySetInnerHTML={{ __html: inline(item) }} />
+              </li>
             ))}
           </ol>
         );
@@ -90,7 +96,7 @@ function renderMarkdownBlocks(text = "") {
     flushList(idx);
     const cleanP = l.replace(/^#+\s*/, "");
     elements.push(
-      <p key={`p-${idx}`} className="my-1.5" dangerouslySetInnerHTML={{ __html: inline(cleanP) }} />
+      <p key={`p-${idx}`} className="my-1.5 leading-relaxed text-[var(--ink)]" dangerouslySetInnerHTML={{ __html: inline(cleanP) }} />
     );
   });
 
@@ -171,7 +177,7 @@ export default function App() {
     if (s === 1) {
       if (!formData.name.trim()) return "F.I.Sh. kiriting.";
       const ageNum = Number(formData.age);
-      if (!ageNum || ageNum < 16 || ageNum > 100) return "Yoshni 16 dan 100 gacha kiriting.";
+      if (!ageNum || ageNum < 16 || ageNum > 100) return "Yoshni 16 dan 100 gacha to'g'ri kiriting.";
       if (!formData.mahalla) return "Mahallani tanlang.";
     }
     if (s === 2) {
@@ -377,11 +383,11 @@ export default function App() {
     }
   };
 
-  const stepTitles = ["Fuqaro", "Holati", "Maqsad"];
+  const stepTitles = ["Fuqaro ma'lumotlari", "Ijtimoiy holati", "Murojaat va maqsad"];
 
   return (
     <div className="app" id="app">
-      {/* Topbar */}
+      {/* Top Bar */}
       <header className="bar pad">
         <div className="logo" aria-hidden="true">F</div>
         <div>
@@ -389,11 +395,13 @@ export default function App() {
           <small>Xovos tumani • MFY yettiligi</small>
         </div>
         <div className="spacer"></div>
+        
+        {/* Dark/Light mode switcher */}
         <button
           onClick={toggleTheme}
           title={theme === "dark" ? "Kunduzgi rejim" : "Tungi rejim"}
           aria-label="Rejimni o'zgartirish"
-          className="p-1.5 rounded-full hover:bg-white/20 transition-colors text-white"
+          className="p-2 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-white border border-white/15 mr-1"
         >
           {theme === "dark" ? (
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
@@ -413,7 +421,12 @@ export default function App() {
             </svg>
           )}
         </button>
-        <span className="test">Pilot</span>
+
+        {/* Live Status Pill */}
+        <span className="test-pill">
+          <span className="live-dot"></span>
+          Pilot
+        </span>
       </header>
 
       {/* Main Content Area */}
@@ -421,42 +434,54 @@ export default function App() {
         {/* ================= SCREEN 1: QABUL ================= */}
         {view === "form" && (
           <section className="screen" id="s-form" aria-label="Yangi qabul">
-            <div className="stephead">
-              <h2 id="stepTitle">{stepTitles[step - 1]}</h2>
-              <span id="stepNo">{step} / 3</span>
+            {/* Stepper Header */}
+            <div className="stepper-wrap">
+              <div className="stephead">
+                <h2>{stepTitles[step - 1]}</h2>
+                <span className="badge-counter">{step} / 3</span>
+              </div>
+
+              <div className="steps-bar" aria-hidden="true">
+                <i className={step >= 1 ? "on" : ""}></i>
+                <i className={step >= 2 ? "on" : ""}></i>
+                <i className={step >= 3 ? "on" : ""}></i>
+              </div>
             </div>
 
-            <div className="steps" aria-hidden="true">
-              <i className={step >= 1 ? "on" : ""}></i>
-              <i className={step >= 2 ? "on" : ""}></i>
-              <i className={step >= 3 ? "on" : ""}></i>
-            </div>
-
-            <form id="form" className="card" onSubmit={handleNextStep} noValidate>
+            <form id="form" className="card-pro" onSubmit={handleNextStep} noValidate>
               {/* STEP 1: FUQARO */}
               {step === 1 && (
                 <div className="fieldgrid" data-step="1">
-                  <div className="f">
-                    <label htmlFor="name">F.I.Sh.</label>
+                  <div className="f-pro">
+                    <label htmlFor="name">
+                      <span>Fuqaro F.I.Sh.</span>
+                      <span className="text-[11.5px] font-normal text-[var(--muted)]">To'liq ism</span>
+                    </label>
                     <input
                       type="text"
                       id="name"
+                      className="input-pro"
                       autoComplete="off"
                       placeholder="Masalan: Valiyev Ali Oltiboy o'g'li"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     />
-                    <span className="hint text-[12.5px] text-[var(--muted)]">
-                      AI'ga to'liq ism yuborilmaydi, faqat bosh harflar.
-                    </span>
+                    <div className="flex items-center gap-1.5 text-[12px] text-[var(--muted)] mt-1">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 flex-none text-[var(--accent)]">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                      <span>AI tahliliga to'liq ism yuborilmaydi, faqat bosh harflar uzatiladi.</span>
+                    </div>
                   </div>
 
                   <div className="row2">
-                    <div className="f">
+                    <div className="f-pro">
                       <label htmlFor="age">Yosh</label>
                       <input
                         type="number"
                         id="age"
+                        className="input-pro text-center font-semibold"
                         min="16"
                         max="100"
                         inputMode="numeric"
@@ -466,14 +491,15 @@ export default function App() {
                       />
                     </div>
 
-                    <div className="f">
+                    <div className="f-pro">
                       <label htmlFor="mahalla">Mahalla (Hudud)</label>
                       <select
                         id="mahalla"
+                        className="input-pro font-medium"
                         value={formData.mahalla}
                         onChange={(e) => setFormData({ ...formData, mahalla: e.target.value })}
                       >
-                        <option value="">Tanlang</option>
+                        <option value="">Mahallani tanlang</option>
                         {MFYS.map((m) => (
                           <option key={m} value={m}>{m}</option>
                         ))}
@@ -486,9 +512,9 @@ export default function App() {
               {/* STEP 2: HOLATI */}
               {step === 2 && (
                 <div className="fieldgrid" data-step="2">
-                  <fieldset>
-                    <legend>Ijtimoiy holati</legend>
-                    <div className="chips">
+                  <fieldset className="fset-pro">
+                    <legend>Ijtimoiy daftarlar va reyestr</legend>
+                    <div className="chips-pro">
                       {[
                         "Temir daftar",
                         "Ayollar daftari",
@@ -510,9 +536,9 @@ export default function App() {
                     </div>
                   </fieldset>
 
-                  <fieldset>
+                  <fieldset className="fset-pro">
                     <legend>Bandlik holati</legend>
-                    <div className="chips">
+                    <div className="chips-pro">
                       {[
                         "Ishsiz",
                         "Norasmiy band",
@@ -534,9 +560,9 @@ export default function App() {
                     </div>
                   </fieldset>
 
-                  <fieldset>
-                    <legend>Jismoniy holati</legend>
-                    <div className="chips">
+                  <fieldset className="fset-pro">
+                    <legend>Jismoniy va salomatlik holati</legend>
+                    <div className="chips-pro">
                       {[
                         "Sog'lom",
                         "Nogironligi bor",
@@ -561,70 +587,111 @@ export default function App() {
               {/* STEP 3: MAQSAD */}
               {step === 3 && (
                 <div className="fieldgrid" data-step="3">
-                  <div className="f">
-                    <label htmlFor="goal">Murojaat masalasi (sohasi)</label>
+                  <div className="f-pro">
+                    <label htmlFor="goal">
+                      <span>Murojaat masalasi (yo'nalishi)</span>
+                      <span className="text-[11.5px] font-normal text-[var(--muted)]">38 ta yo'nalish</span>
+                    </label>
                     <select
                       id="goal"
+                      className="input-pro font-medium"
                       value={formData.goal}
                       onChange={(e) => setFormData({ ...formData, goal: e.target.value })}
                     >
-                      <option value="">Tanlang</option>
+                      <option value="">Yo'nalishni tanlang</option>
                       {Object.entries(TYPES).map(([k, v]) => (
                         <option key={k} value={v}>{v}</option>
                       ))}
                     </select>
                   </div>
 
-                  <div className="f">
-                    <label htmlFor="skills">Qabiliyat va qiziqishlari</label>
+                  <div className="f-pro">
+                    <label htmlFor="skills">Qobiliyat, qiziqish va mutaxassisligi</label>
                     <textarea
                       id="skills"
-                      placeholder="Masalan: qandolatchilik, IT, tikuvchilik, chorvachilik bo'yicha tajribasi bor"
+                      className="input-pro"
+                      placeholder="Masalan: qandolatchilik, IT dasturlash, tikuvchilik, chorvachilik yoki avto-ta'mirlash bo'yicha ko'nikmasi bor"
                       value={formData.skills}
                       onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
                     ></textarea>
                   </div>
 
-                  <label className="check">
+                  <label className="check-pro">
                     <input
                       type="checkbox"
                       id="consent"
                       checked={formData.consent}
                       onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
                     />
-                    <span>Fuqaro ma'lumotlarini tavsiya olish uchun qayta ishlashga rozilik berdi.</span>
+                    <span>
+                      Fuqaro ma'lumotlarini qonuniy tartibda tavsiya olish va MFY doirasida qayta ishlashga rozilik bildirdi.
+                    </span>
                   </label>
                 </div>
               )}
 
               {/* Error Alert */}
               {formError && (
-                <div className="err" id="err" role="alert" style={{ marginTop: "12px" }}>
-                  {formError}
+                <div className="p-3 rounded-xl bg-[var(--crit-bg)] border border-[var(--crit-border)] text-[var(--crit)] text-[13px] font-semibold flex items-center gap-2 mt-3 animate-shake">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 flex-none">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <span>{formError}</span>
                 </div>
               )}
 
-              {/* Wizard Buttons */}
-              <div className="btnrow" style={{ marginTop: "4px" }}>
+              {/* Navigation Buttons */}
+              <div className="flex gap-2.5 mt-5">
                 {step > 1 && (
-                  <button type="button" className="btn ghost" id="prev" onClick={handlePrevStep}>
+                  <button
+                    type="button"
+                    className="btn-pro btn-ghost-pro flex-1"
+                    id="prev"
+                    onClick={handlePrevStep}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4">
+                      <polyline points="15 18 9 12 15 6" />
+                    </svg>
                     Orqaga
                   </button>
                 )}
-                <button type="submit" className="btn" id="next">
-                  {step === 3 ? "AI tahlil qilish" : "Keyingi"}
+                <button
+                  type="submit"
+                  className="btn-pro btn-primary-pro flex-1"
+                  id="next"
+                >
+                  {step === 3 ? (
+                    <>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                      </svg>
+                      AI tahlil qilish
+                    </>
+                  ) : (
+                    <>
+                      Keyingi
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
 
+            {/* Demo Button */}
             <button
               type="button"
-              className="btn ghost small"
+              className="py-2.5 px-3.5 rounded-xl border border-[var(--line)] bg-[var(--surface)] text-[var(--muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] text-xs font-semibold flex items-center gap-1.5 self-start shadow-sm transition-all active:scale-95"
               id="demo"
-              style={{ alignSelf: "flex-start" }}
               onClick={handleFillDemo}
             >
-              Namuna bilan to'ldirish
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-[var(--accent)]">
+                <path d="M15 4V2 M15 16v-2 M8 9h2 M20 9h2 M17.8 11.8L19 13 M15 9h0 M17.8 6.2L19 5 M3 21l9-9" />
+              </svg>
+              Namuna bilan to'ldirish (Demo)
             </button>
           </section>
         )}
@@ -633,92 +700,159 @@ export default function App() {
         {view === "result" && (
           <section className="screen" id="s-result" aria-label="Tahlil">
             {!cur ? (
-              <div className="empty">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M9 12l2 2 4-4" />
-                  <circle cx="12" cy="12" r="9" />
-                </svg>
-                <p>
-                  Hali tahlil yo'q.<br />
-                  «Qabul» bo'limida fuqaro ma'lumotini kiriting.
+              <div className="card-pro text-center py-12 px-4">
+                <div className="w-16 h-16 rounded-2xl bg-[var(--soft)] text-[var(--accent)] border border-[var(--soft-border)] mx-auto flex items-center justify-center mb-4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M9 12l2 2 4-4" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold mb-1">Hozircha tahlil yo'q</h3>
+                <p className="text-[var(--muted)] text-sm max-w-xs mx-auto mb-5">
+                  Fuqaroni qabul qilish va AI xulosasini ko'rish uchun «Qabul» bo'limida shaklni to'ldiring.
                 </p>
+                <button
+                  onClick={() => goToView("form")}
+                  className="btn-pro btn-primary-pro inline-flex py-2 px-5 text-sm"
+                >
+                  Qabulga o'tish
+                </button>
               </div>
             ) : (
               <>
-                {/* Meta Card */}
-                <div className="card">
-                  <div className="who">
-                    <div className="avatar">{cur.meta.ini.replace(/\./g, "")}</div>
-                    <div>
-                      <h2 style={{ fontSize: "18px" }}>{cur.meta.ini}, {cur.meta.age} yosh</h2>
-                      <p style={{ color: "var(--muted)", fontSize: "13.5px" }}>{cur.meta.mahalla}</p>
+                {/* Bento Citizen Summary Card */}
+                <div className="card-pro">
+                  <div className="flex gap-3.5 items-center">
+                    <div className="avatar-pro">{cur.meta.ini.replace(/\./g, "")}</div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-lg font-bold tracking-tight truncate">{cur.meta.ini}, {cur.meta.age} yosh</h2>
+                      </div>
+                      <p className="text-[13px] text-[var(--muted)] font-medium mt-0.5">{cur.meta.mahalla}</p>
                     </div>
+                    {cur.engine && (
+                      <span className="text-[10.5px] font-bold text-[var(--accent)] bg-[var(--soft)] border border-[var(--soft-border)] rounded-full px-2.5 py-1 whitespace-nowrap">
+                        Gemini AI
+                      </span>
+                    )}
                   </div>
-                  <div className="meta">
-                    <span>{cur.meta.goal}</span>
-                    <span>{cur.meta.work}</span>
-                    <span>{cur.meta.phys}</span>
-                    <span>{cur.meta.social}</span>
+
+                  <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-[var(--line-subtle)]">
+                    <span className="tag-pill font-semibold text-[var(--accent)] bg-[var(--soft)] border-[var(--soft-border)]">
+                      {cur.meta.goal}
+                    </span>
+                    <span className="tag-pill">{cur.meta.work}</span>
+                    <span className="tag-pill">{cur.meta.phys}</span>
+                    <span className="tag-pill">{cur.meta.social}</span>
                   </div>
                 </div>
 
                 {/* State: Loading */}
                 {cur.state === "loading" && (
-                  <>
-                    <div className="card" aria-live="polite">
-                      <p style={{ fontWeight: 600, marginBottom: "12px" }}>AI tahlil qilmoqda…</p>
-                      <div className="skel" style={{ width: "90%" }}></div>
-                      <div className="skel" style={{ width: "75%" }}></div>
-                      <div className="skel" style={{ width: "85%" }}></div>
-                      <div className="skel" style={{ width: "60%" }}></div>
+                  <div className="card-pro space-y-3 py-6" aria-live="polite">
+                    <div className="flex items-center gap-2.5 font-bold text-sm text-[var(--accent)]">
+                      <svg className="animate-spin h-4 w-4 text-[var(--accent)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span>Google Gemini sun'iy intellekti tahlil qilmoqda…</span>
                     </div>
-                    <button className="btn ghost" id="cancel" onClick={handleCancelAnalysis}>
-                      Bekor qilish
-                    </button>
-                  </>
+                    <div className="skel-pro" style={{ width: "95%" }}></div>
+                    <div className="skel-pro" style={{ width: "80%" }}></div>
+                    <div className="skel-pro" style={{ width: "88%" }}></div>
+                    <div className="skel-pro" style={{ width: "65%" }}></div>
+
+                    <div className="pt-2">
+                      <button className="btn-pro btn-ghost-pro w-full text-xs" id="cancel" onClick={handleCancelAnalysis}>
+                        Bekor qilish
+                      </button>
+                    </div>
+                  </div>
                 )}
 
                 {/* State: Error */}
                 {cur.state === "error" && (
-                  <>
-                    <div className="card" role="alert">
-                      <p style={{ color: "var(--crit)", fontWeight: 600 }}>{cur.error}</p>
+                  <div className="card-pro space-y-4">
+                    <div className="p-3.5 rounded-xl bg-[var(--crit-bg)] border border-[var(--crit-border)] text-[var(--crit)] flex items-start gap-2.5">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 flex-none mt-0.5">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="8" x2="12" y2="12" />
+                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                      </svg>
+                      <p className="text-sm font-semibold">{cur.error}</p>
                     </div>
-                    <div className="btnrow">
-                      <button className="btn" id="retry" onClick={handleRetry}>
+                    <div className="flex gap-2">
+                      <button className="btn-pro btn-primary-pro flex-1" id="retry" onClick={handleRetry}>
                         Qayta urinish
                       </button>
-                      <button className="btn ghost" id="edit" onClick={() => goToView("form")}>
-                        Ma'lumotni o'zgartirish
+                      <button className="btn-pro btn-ghost-pro flex-1" id="edit" onClick={() => goToView("form")}>
+                        O'zgartirish
                       </button>
                     </div>
-                  </>
+                  </div>
                 )}
 
-                {/* State: Done */}
+                {/* State: Done (4 Cards) */}
                 {cur.state === "done" && (
                   <>
                     {parseSections(cur.text).map((s, i) => (
-                      <article key={i} className="card sec">
-                        <div className="head">
-                          <span className="ic">{getSectionIcon(i)}</span>
+                      <article key={i} className="sec-card">
+                        <div className="sec-head">
+                          <span className="sec-ic">{getSectionIcon(i)}</span>
                           <h3>{s.title}</h3>
                         </div>
-                        <div className="body">
+                        <div className="sec-body">
                           {renderMarkdownBlocks(s.body)}
                         </div>
                       </article>
                     ))}
 
-                    <p className="note">
-                      AI tavsiyasi yordamchi vosita. Dastur shartlari va hujjatlar rasmiy manbada tekshirilsin, qaror MFY xodimida qoladi.
-                    </p>
+                    {/* Disclaimer note */}
+                    <div className="note-pro">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 flex-none mt-0.5">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="16" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                      </svg>
+                      <span>
+                        AI tavsiyasi yordamchi vosita hisoblanadi. Yakuniy qaror va rasmiy hujjatlar MFY xodimi (Hokim yordamchisi) tomonidan tasdiqlanadi.
+                      </span>
+                    </div>
 
-                    <div className="btnrow">
-                      <button className="btn" id="copy" onClick={handleCopyResult}>
-                        {copySuccess ? "✓ Nusxa olindi" : "Nusxa olish"}
+                    {/* Action Buttons */}
+                    <div className="flex gap-2.5 pt-1">
+                      <button
+                        className="btn-pro btn-primary-pro flex-1"
+                        id="copy"
+                        onClick={handleCopyResult}
+                      >
+                        {copySuccess ? (
+                          <>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            Nusxa olindi!
+                          </>
+                        ) : (
+                          <>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                            Nusxa olish
+                          </>
+                        )}
                       </button>
-                      <button className="btn ghost" id="again" onClick={handleStartNew}>
+
+                      <button
+                        className="btn-pro btn-ghost-pro flex-1"
+                        id="again"
+                        onClick={handleStartNew}
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                          <line x1="12" y1="5" x2="12" y2="19" />
+                          <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
                         Yangi qabul
                       </button>
                     </div>
@@ -733,35 +867,63 @@ export default function App() {
         {view === "hist" && (
           <section className="screen" id="s-hist" aria-label="Tarix">
             {hist.length === 0 ? (
-              <div className="empty">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 7v5l3 2" />
-                </svg>
-                <p>
-                  Tarix bo'sh.<br />
-                  Tahlil tugagach, shu yerda saqlanadi.
+              <div className="card-pro text-center py-12 px-4">
+                <div className="w-16 h-16 rounded-2xl bg-[var(--soft)] text-[var(--accent)] border border-[var(--soft-border)] mx-auto flex items-center justify-center mb-4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-8 h-8">
+                    <circle cx="12" cy="12" r="9" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-bold mb-1">Tarix hozircha bo'sh</h3>
+                <p className="text-[var(--muted)] text-sm max-w-xs mx-auto mb-5">
+                  Qabul qilingan fuqarolar tahlili shu yerda avtomatik saqlanib boradi.
                 </p>
+                <button
+                  onClick={() => goToView("form")}
+                  className="btn-pro btn-primary-pro inline-flex py-2 px-5 text-sm"
+                >
+                  Yangi qabul boshlash
+                </button>
               </div>
             ) : (
               <>
-                <p className="note" style={{ background: "var(--soft)", color: "var(--ink)" }}>
-                  Tarix faqat shu qurilmada, bosh harflar bilan saqlanadi ({hist.length} ta yozuv).
-                </p>
+                {/* Stats badge */}
+                <div className="flex items-center justify-between p-3 rounded-xl bg-[var(--soft)] border border-[var(--soft-border)] text-[var(--ink)]">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[var(--accent)]"></span>
+                    <span className="text-xs font-semibold">Qurilmada saqlangan qabullar</span>
+                  </div>
+                  <span className="text-xs font-bold text-[var(--accent)] px-2 py-0.5 rounded-full bg-[var(--surface)] border border-[var(--line)]">
+                    {hist.length} ta yozuv
+                  </span>
+                </div>
 
-                {/* Excel & CSV Export buttons */}
-                <div className="flex gap-2 mb-1">
+                {/* Excel & CSV Action Bar */}
+                <div className="flex gap-2">
                   <button
                     onClick={() => downloadExcel(hist)}
-                    className="flex-1 py-2 px-3 text-xs font-bold rounded-xl border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)] hover:border-[var(--accent)] flex items-center justify-center gap-1.5 shadow-sm transition-colors"
+                    className="flex-1 py-2.5 px-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 active:scale-95 text-emerald-700 dark:text-emerald-300 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
                   >
-                    <span>📥 Excel (.xls)</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="8" y1="13" x2="16" y2="13" />
+                      <line x1="8" y1="17" x2="16" y2="17" />
+                      <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                    <span>Excel (.xls) yuklab olish</span>
                   </button>
+
                   <button
                     onClick={() => downloadCsv(hist)}
-                    className="flex-1 py-2 px-3 text-xs font-bold rounded-xl border border-[var(--line)] bg-[var(--surface)] text-[var(--ink)] hover:border-[var(--accent)] flex items-center justify-center gap-1.5 shadow-sm transition-colors"
+                    className="flex-1 py-2.5 px-3 rounded-xl border border-[var(--line)] bg-[var(--surface)] hover:border-[var(--accent)] active:scale-95 text-[var(--ink)] font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
                   >
-                    <span>📄 CSV yuklab olish</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[var(--accent)]">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <span>CSV yuklab olish</span>
                   </button>
                 </div>
 
@@ -770,10 +932,12 @@ export default function App() {
                   {hist.map((h) => (
                     <button
                       key={h.id}
-                      className="hist"
+                      className="hist-card"
                       onClick={() => handleHistoryItemClick(h)}
                     >
-                      <div className="avatar">{h.meta.ini.replace(/\./g, "")}</div>
+                      <div className="avatar-pro" style={{ width: "42px", height: "42px", fontSize: "14px", borderRadius: "12px" }}>
+                        {h.meta.ini.replace(/\./g, "")}
+                      </div>
                       <div className="t">
                         <b>{h.meta.ini}, {h.meta.age} yosh · {h.meta.goal}</b>
                         <small>
@@ -785,28 +949,33 @@ export default function App() {
                           })}
                         </small>
                       </div>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[var(--muted)] flex-none">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
                     </button>
                   ))}
                 </div>
 
-                {/* Wipe History Button */}
-                <button
-                  type="button"
-                  className={wipeConfirm ? "btn danger small" : "btn ghost small"}
-                  id="wipe"
-                  style={{ alignSelf: "flex-start", marginTop: "8px" }}
-                  onClick={handleWipeHistory}
-                >
-                  {wipeConfirm ? "Aniq tozalansinmi? Yana bosing" : "Tarixni tozalash"}
-                </button>
+                {/* Wipe Button */}
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    className={wipeConfirm ? "btn-pro btn-danger-pro w-full text-xs" : "btn-pro btn-ghost-pro text-xs py-2 px-3 border-[var(--line)] text-[var(--muted)] hover:text-[var(--crit)] hover:border-[var(--crit)]"}
+                    id="wipe"
+                    style={{ alignSelf: "flex-start" }}
+                    onClick={handleWipeHistory}
+                  >
+                    {wipeConfirm ? "Aniq tozalansinmi? Tasdiqlash uchun yana bosing" : "Tarixni tozalash"}
+                  </button>
+                </div>
               </>
             )}
           </section>
         )}
       </main>
 
-      {/* ================= BOTTOM TABS ================= */}
-      <nav className="tabs" role="tablist" aria-label="Bo'limlar">
+      {/* ================= BOTTOM TABS DOCK ================= */}
+      <nav className="tabs-dock" role="tablist" aria-label="Bo'limlar">
         <button
           role="tab"
           id="t-form"
@@ -816,7 +985,7 @@ export default function App() {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M12 5v14M5 12h14" />
           </svg>
-          Qabul
+          <span>Qabul</span>
         </button>
 
         <button
@@ -829,7 +998,7 @@ export default function App() {
             <path d="M9 12l2 2 4-4" />
             <circle cx="12" cy="12" r="9" />
           </svg>
-          Tahlil
+          <span>Tahlil</span>
         </button>
 
         <button
@@ -840,9 +1009,9 @@ export default function App() {
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="9" />
-            <path d="M12 7v5l3 2" />
+            <polyline points="12 6 12 12 16 14" />
           </svg>
-          Tarix
+          <span>Tarix</span>
         </button>
       </nav>
     </div>
