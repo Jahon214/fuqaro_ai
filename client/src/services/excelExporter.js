@@ -1,183 +1,218 @@
-import { TYPES, fmt } from "../constants.js";
+/**
+ * Excel & CSV Exporter for Xovos Fuqaro AI
+ * Exports all citizen survey records + AI recommendations.
+ */
 
-const WORK_LABELS = {
-  jobless: "Ishsiz",
-  employed: "Ishlaydi",
-  self: "O'zini o'zi band qilgan",
-  student: "Talaba / o'quvchi",
-  home: "Uy bekasi",
-  retired: "Pensioner"
-};
+// Helper to escape CSV cell (RFC 4180 standard)
+function escapeCsvCell(cell) {
+  if (cell == null) return '""';
+  const str = String(cell).replace(/\r\n/g, " ").replace(/\n/g, " ");
+  return `"${str.replace(/"/g, '""')}"`;
+}
 
-const HOUSING_LABELS = {
-  own: "O'z uyi, qoniqarli",
-  bad: "O'z uyi, yomon sharoitda",
-  rent: "Ijarada",
-  none: "Uy-joyi yo'q"
-};
+// Helper to extract clean text from section
+export function parseSections(text = "") {
+  const parts = [];
+  let cur = null;
+  text.split("\n").forEach(line => {
+    const m = line.match(/^#{1,3}\s*(.+)/);
+    if (m) {
+      cur = { title: m[1].replace(/[*_]/g, "").trim(), body: "" };
+      parts.push(cur);
+    } else if (cur) {
+      cur.body += line + "\n";
+    } else if (line.trim()) {
+      cur = { title: "Xulosa", body: line + "\n" };
+      parts.push(cur);
+    }
+  });
+  return parts;
+}
 
-const EDU_LABELS = {
-  none: "Maktabni tugatmagan",
-  school: "O'rta maktab",
-  college: "O'rta maxsus / Kollej",
-  uni: "Oliy ma'lumotli"
-};
-
-const DISAB_LABELS = {
-  0: "Yo'q",
-  1: "I guruh",
-  2: "II guruh",
-  3: "III guruh"
-};
+export function extractSection(text = "", searchTitle = "") {
+  const secs = parseSections(text);
+  const found = secs.find(s => s.title.toLowerCase().includes(searchTitle.toLowerCase()));
+  return found ? found.body.trim().replace(/\r?\n/g, " ") : "";
+}
 
 /**
- * Builds array of rows representing all citizen survey fields
+ * Downloads universal CSV with UTF-8 BOM (Byte Order Mark)
+ * Opens cleanly in Microsoft Excel on Windows with Uzbek letters (o', g', sh, ch) intact.
  */
-export function buildTableRows(casesList = []) {
+export function downloadCsv(hist = [], filename = `fuqaro_ai_xovos_${new Date().toISOString().slice(0, 10)}.csv`) {
   const headers = [
     "№",
-    "Ariza ID",
-    "Sana va vaqt",
-    "Fuqaro F.I.Sh.",
+    "F.I.Sh.",
+    "Bosh harflari",
     "Yoshi",
-    "Jinsi",
-    "Mahalla (MFY)",
-    "Murojaat yo'nalishi",
-    "Oila a'zolari",
-    "18 yoshgacha bolalar",
-    "Oylik daromad (so'm)",
-    "Kishi boshiga daromad (so'm)",
-    "Uy-joy sharoiti",
+    "Mahalla (Hudud)",
+    "Ijtimoiy holati",
     "Bandlik holati",
-    "Ta'lim darajasi",
-    "Nogironlik guruhi",
-    "Qarz yoki kredit",
-    "Fuqaro so'zi bilan izoh",
-    "AI: Kambag'allik xavfi",
-    "AI: Qarz tangligi",
-    "AI: Ustuvorlik",
-    "AI: Tavsiya etilgan paket",
-    "AI: MFY xodimi (Hokim yordamchisi) uchun 3 ta qadam"
+    "Jismoniy holati",
+    "Murojaat masalasi",
+    "Qobiliyat va qiziqishlari",
+    "Sana va vaqt",
+    "AI: Qisqacha xulosa",
+    "AI: Xatar va imkoniyatlar",
+    "AI: Aniq qadamlar",
+    "AI: Muqobil taklif"
   ];
 
   const rows = [headers];
 
-  casesList.forEach((c, idx) => {
-    const p = c.p || c;
-    const ai = c.aiAnalysis || {};
-    const pc = p.income != null && p.members ? Math.round(p.income / p.members) : (c.pc || "");
-    const dateStr = c.ts ? new Date(c.ts).toLocaleString("uz-UZ") : new Date().toLocaleDateString("uz-UZ");
+  hist.forEach((h, idx) => {
+    const m = h.meta || {};
+    const text = h.text || "";
 
-    const steps = Array.isArray(ai.adminAdvice)
-      ? ai.adminAdvice.map((s, i) => `${i + 1}) ${s}`).join(" | ")
-      : "";
+    const xulosa = extractSection(text, "xulosa") || text.slice(0, 200).replace(/\r?\n/g, " ");
+    const xatar = extractSection(text, "xatar");
+    const qadamlar = extractSection(text, "qadamlar");
+    const muqobil = extractSection(text, "muqobil");
 
     rows.push([
       idx + 1,
-      c.id || `Q-${idx + 100}`,
-      dateStr,
-      p.name || p.ini || "Noma'lum",
-      p.age != null ? p.age : "",
-      p.gender || "",
-      p.mfy || "",
-      TYPES[p.type] || p.type || "",
-      p.members != null ? p.members : 1,
-      p.children != null ? p.children : 0,
-      p.income != null ? p.income : 0,
-      pc,
-      HOUSING_LABELS[p.housing] || p.housing || "",
-      WORK_LABELS[p.work] || p.work || "",
-      EDU_LABELS[p.edu] || p.edu || "",
-      DISAB_LABELS[p.disab] || (p.disab ? `${p.disab}-guruh` : "Yo'q"),
-      p.debt === "yes" ? "Bor" : "Yo'q",
-      p.notes ? p.notes.replace(/\r?\n/g, " ") : "",
-      ai.povertyRisk || "—",
-      ai.debtRisk || "—",
-      ai.priorityLevel || "—",
-      ai.socialPackage || "Davlat yordam paketi",
-      steps
+      m.name || m.ini || "—",
+      m.ini || "—",
+      m.age || "",
+      m.mahalla || "",
+      m.social || "",
+      m.work || "",
+      m.phys || "",
+      m.goal || "",
+      (m.skills || "").replace(/\r?\n/g, " "),
+      new Date(m.ts || Date.now()).toLocaleString("uz-UZ"),
+      xulosa,
+      xatar,
+      qadamlar,
+      muqobil
     ]);
   });
 
-  return rows;
-}
-
-/**
- * Downloads data as a standard UTF-8 CSV with BOM for Microsoft Excel
- */
-export function downloadCsv(casesList = [], filename = "xovos_fuqaro_qabullar") {
-  const rows = buildTableRows(casesList);
-  const csvString = rows
-    .map(row => row.map(cell => `"${String(cell == null ? "" : cell).replace(/"/g, '""')}"`).join(","))
+  const csvContent = rows
+    .map(row => row.map(escapeCsvCell).join(","))
     .join("\r\n");
 
-  const blob = new Blob(["\uFEFF" + csvString], { type: "text/csv;charset=utf-8;" });
-  triggerBrowserDownload(blob, `${filename}_${getFormattedDate()}.csv`);
+  // UTF-8 Byte Order Mark for Excel (\uFEFF)
+  const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+  triggerDownload(blob, filename);
 }
 
 /**
- * Downloads data as formatted native Microsoft Excel document (.xls)
+ * Downloads formatted HTML-based Excel file (.xls)
+ * Opens in Microsoft Excel with formatted headers, borders, and colors.
  */
-export function downloadExcel(casesList = [], filename = "xovos_fuqaro_qabullar") {
-  const rows = buildTableRows(casesList);
+export function downloadExcel(hist = [], filename = `fuqaro_ai_xovos_${new Date().toISOString().slice(0, 10)}.xls`) {
+  const headers = [
+    "№",
+    "F.I.Sh.",
+    "Bosh harflari",
+    "Yoshi",
+    "Mahalla (Hudud)",
+    "Ijtimoiy holati",
+    "Bandlik holati",
+    "Jismoniy holati",
+    "Murojaat masalasi",
+    "Qobiliyat va qiziqishlari",
+    "Sana va vaqt",
+    "AI: Qisqacha xulosa",
+    "AI: Xatar va imkoniyatlar",
+    "AI: Aniq qadamlar",
+    "AI: Muqobil taklif"
+  ];
 
-  let tableHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
-    <x:Name>Fuqaro So'rovnomalari</x:Name>
-    <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
-    </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
-    <style>
-      th { background-color: #059669; color: #ffffff; font-weight: bold; border: 1px solid #d1d5db; padding: 8px; text-align: left; }
-      td { border: 1px solid #e5e7eb; padding: 6px; font-size: 11pt; }
-      .num { mso-number-format:"\\#\\,\\#\\#0"; }
-      .bold { font-weight: bold; }
-    </style>
-  </head>
-  <body>
-    <h3>Xovos tumani MFY — Fuqarolar So'rovnomalari va AI Tahlili Jadvali</h3>
-    <p>Shakllantirilgan sana: ${new Date().toLocaleString("uz-UZ")} | Jami arizalar: ${casesList.length} ta</p>
-    <table>
-      <thead>
-        <tr>
-          ${rows[0].map(h => `<th>${escapeHtml(h)}</th>`).join("")}
-        </tr>
-      </thead>
-      <tbody>
-        ${rows.slice(1).map(r => `<tr>${r.map((c, i) => `<td>${escapeHtml(c)}</td>`).join("")}</tr>`).join("")}
-      </tbody>
-    </table>
-  </body>
-  </html>`;
+  const rowsHtml = hist.map((h, idx) => {
+    const m = h.meta || {};
+    const text = h.text || "";
+
+    const xulosa = extractSection(text, "xulosa") || text.slice(0, 200);
+    const xatar = extractSection(text, "xatar");
+    const qadamlar = extractSection(text, "qadamlar");
+    const muqobil = extractSection(text, "muqobil");
+
+    const bg = idx % 2 === 0 ? "#ffffff" : "#f8fafc";
+    return `
+      <tr style="background-color: ${bg};">
+        <td style="text-align: center; border: 1px solid #cbd5e1; padding: 6px;">${idx + 1}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px; font-weight: bold;">${escapeHtml(m.name || m.ini || "—")}</td>
+        <td style="text-align: center; border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(m.ini || "—")}</td>
+        <td style="text-align: center; border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(m.age || "—")}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(m.mahalla || "—")}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(m.social || "—")}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(m.work || "—")}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(m.phys || "—")}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(m.goal || "—")}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(m.skills || "—")}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px; white-space: nowrap;">${new Date(m.ts || Date.now()).toLocaleString("uz-UZ")}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(xulosa)}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(xatar)}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(qadamlar)}</td>
+        <td style="border: 1px solid #cbd5e1; padding: 6px;">${escapeHtml(muqobil)}</td>
+      </tr>
+    `;
+  }).join("");
+
+  const tableHtml = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+      <meta charset="utf-8" />
+      <!--[if gte mso 9]>
+      <xml>
+        <x:ExcelWorkbook>
+          <x:ExcelWorksheets>
+            <x:ExcelWorksheet>
+              <x:Name>Fuqaro AI Qabullar</x:Name>
+              <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
+            </x:ExcelWorksheet>
+          </x:ExcelWorksheets>
+        </x:ExcelWorkbook>
+      </xml>
+      <![endif]-->
+      <style>
+        th { background-color: #0a5f93; color: #ffffff; font-weight: bold; border: 1px solid #084c75; padding: 8px; }
+        td { font-family: Segoe UI, Arial, sans-serif; font-size: 11pt; }
+      </style>
+    </head>
+    <body>
+      <h2 style="font-family: Arial, sans-serif; color: #0a5f93;">Xovos tumani — Fuqaro AI Qabullar jurnali</h2>
+      <p style="font-family: Arial, sans-serif; color: #64748b; font-size: 10pt;">
+        Eksport vaqti: ${new Date().toLocaleString("uz-UZ")} | Jami arizalar soni: ${hist.length} ta
+      </p>
+      <table border="1" style="border-collapse: collapse; font-family: Arial, sans-serif;">
+        <thead>
+          <tr>
+            ${headers.map(h => `<th>${escapeHtml(h)}</th>`).join("")}
+          </tr>
+        </thead>
+        <tbody>
+          ${rowsHtml}
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `;
 
   const blob = new Blob(["\uFEFF" + tableHtml], { type: "application/vnd.ms-excel;charset=utf-8" });
-  triggerBrowserDownload(blob, `${filename}_${getFormattedDate()}.xls`);
+  triggerDownload(blob, filename);
 }
 
-function triggerBrowserDownload(blob, fullName) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = fullName;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-function getFormattedDate() {
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
-
-function escapeHtml(text) {
-  return String(text == null ? "" : text)
+function escapeHtml(str) {
+  if (str == null) return "";
+  return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function triggerDownload(blob, filename) {
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  link.setAttribute("href", url);
+  link.setAttribute("download", filename);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
