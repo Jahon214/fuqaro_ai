@@ -448,7 +448,7 @@ export default function App() {
 
         {/* Center Desktop Navigation (hidden on mobile, visible on desktop md+) */}
         <div className="spacer hidden md:block"></div>
-        <nav className="hidden md:flex items-center gap-1.5 bg-black/15 p-1 rounded-xl border border-white/20 backdrop-blur-md">
+        <nav className="hidden md:flex items-center gap-1.5 bg-black/25 p-1 rounded-xl border border-white/20">
           <button
             onClick={() => goToView("form")}
             className={`px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-2 transition-all ${
@@ -1259,7 +1259,7 @@ export default function App() {
       </nav>
       {/* ================= PWA INSTALLATION MODAL (iOS & Android) ================= */}
       {showInstallModal && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
+        <div className="fixed inset-0 z-50 bg-black/75 flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
           <div className="w-full sm:max-w-md bg-[var(--surface)] border border-[var(--line)] rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl space-y-5">
             {/* Modal Header with App Icon */}
             <div className="flex items-center gap-3.5 pb-3 border-b border-[var(--line-subtle)]">

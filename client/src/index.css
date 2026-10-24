@@ -83,9 +83,17 @@
 }
 
 html, body {
-  min-height: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden; /* Locks outer body on mobile to prevent status bar blur & scrolling off */
+}
+
+@media (min-width: 768px) {
+  html, body {
+    height: auto;
+    overflow: auto; /* Natural scrolling on desktop */
+  }
 }
 
 body {
@@ -95,16 +103,6 @@ body {
   font-size: 15px;
   line-height: 1.5;
   transition: background-color 0.2s ease, color 0.2s ease;
-  background-image: 
-    radial-gradient(at 100% 0%, rgba(5, 150, 105, 0.04) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(13, 148, 136, 0.03) 0px, transparent 50%);
-  background-attachment: fixed;
-}
-
-:root[data-theme="dark"] body {
-  background-image: 
-    radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.06) 0px, transparent 60%),
-    radial-gradient(at 0% 100%, rgba(5, 150, 105, 0.04) 0px, transparent 60%);
 }
 
 h1, h2, h3, h4 {
@@ -130,13 +128,15 @@ button {
 
 /* Responsive App Container */
 .app {
-  min-height: 100vh;
+  height: 100%;
+  height: 100dvh;
   width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   background: var(--bg);
   position: relative;
+  overflow: hidden;
 }
 
 /* Mobile: max 480px */
@@ -150,10 +150,12 @@ button {
 /* Desktop & Tablet: Expands gracefully */
 @media (min-width: 768px) {
   .app {
+    height: auto;
+    min-height: 100vh;
     max-width: 1080px;
     border-inline: 1px solid var(--line);
-    min-height: 100vh;
     box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.07);
+    overflow: visible;
   }
 }
 
@@ -175,30 +177,33 @@ button {
   }
 }
 
-/* Top bar with prestigious Emerald Gradient & iOS Safe Area Support */
+/* Top bar with 100% Solid Emerald Gradient - Zero Blur, Permanent Pinning */
 .bar {
+  background: #064e3b;
   background: linear-gradient(135deg, #064e3b 0%, #047857 55%, #0d9488 100%);
   color: #ffffff;
-  padding-top: max(calc(env(safe-area-inset-top, 0px) + 24px), 66px);
-  padding-bottom: 14px;
+  padding-top: max(calc(env(safe-area-inset-top, 0px) + 14px), 54px);
+  padding-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 12px;
   flex: none;
-  box-shadow: 0 4px 20px -3px rgba(6, 78, 59, 0.35);
-  position: sticky;
-  top: 0;
-  z-index: 40;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 30;
 }
 
 @media (min-width: 768px) {
   .bar {
     padding-top: 14px;
     padding-bottom: 14px;
+    position: sticky;
+    top: 0;
   }
 }
 
 :root[data-theme="dark"] .bar {
+  background: #0a1f1a;
   background: linear-gradient(135deg, #0a1f1a 0%, #0e2e25 60%, #0a251e 100%);
   border-bottom: 1px solid var(--line);
   box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.6);
@@ -248,9 +253,8 @@ button {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   color: #ffffff;
   border-radius: 999px;
   padding: 3px 10px;
