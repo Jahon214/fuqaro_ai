@@ -135,8 +135,53 @@ export default function App() {
 
   const [copySuccess, setCopySuccess] = useState(false);
   const [wipeConfirm, setWipeConfirm] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [showInstallModal, setShowInstallModal] = useState(false);
+  const [isIosDevice, setIsIosDevice] = useState(false);
   const abortControllerRef = useRef(null);
   const mainRef = useRef(null);
+
+  // Check PWA standalone installation & device type
+  useEffect(() => {
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true;
+    setIsInstalled(isStandalone);
+
+    const ua = window.navigator.userAgent.toLowerCase();
+    const isIos = /iphone|ipad|ipod/.test(ua);
+    setIsIosDevice(isIos);
+
+    const handleBeforeInstall = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstall);
+    window.addEventListener("appinstalled", () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+    });
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstall);
+    };
+  }, []);
+
+  const handleInstallClick = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult && choiceResult.outcome === "accepted") {
+          setIsInstalled(true);
+        }
+        setDeferredPrompt(null);
+      });
+    } else {
+      setShowInstallModal(true);
+    }
+  };
 
   // Sync theme
   useEffect(() => {
@@ -390,7 +435,11 @@ export default function App() {
       {/* Top Bar with Responsive Desktop Navigation */}
       <header className="bar pad">
         <div className="flex items-center gap-3">
-          <div className="logo" aria-hidden="true">F</div>
+          <img
+            src="/logo.png"
+            alt="Fuqaro AI"
+            className="w-9 h-9 rounded-xl object-cover shadow-md border border-white/20 flex-none"
+          />
           <div>
             <h1>Fuqaro AI</h1>
             <small>Xovos tumani • MFY yettiligi</small>
@@ -454,6 +503,23 @@ export default function App() {
 
         <div className="spacer"></div>
         
+        {/* PWA Install Button */}
+        {!isInstalled && (
+          <button
+            onClick={handleInstallClick}
+            title="Ilovani o'rnatish"
+            aria-label="Ilovani o'rnatish"
+            className="p-2 sm:px-3 rounded-xl bg-white/15 hover:bg-white/25 active:scale-95 transition-all text-white border border-white/20 flex items-center gap-1.5 text-xs font-bold mr-1 shadow-sm"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4 text-emerald-300">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            <span className="hidden sm:inline">Ilovani o'rnatish</span>
+          </button>
+        )}
+
         {/* Dark/Light mode switcher */}
         <button
           onClick={toggleTheme}
@@ -1191,6 +1257,101 @@ export default function App() {
           <span>Tarix</span>
         </button>
       </nav>
+      {/* ================= PWA INSTALLATION MODAL (iOS & Android) ================= */}
+      {showInstallModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-fade-in">
+          <div className="w-full sm:max-w-md bg-[var(--surface)] border border-[var(--line)] rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl space-y-5">
+            {/* Modal Header with App Icon */}
+            <div className="flex items-center gap-3.5 pb-3 border-b border-[var(--line-subtle)]">
+              <img
+                src="/logo.png"
+                alt="Fuqaro AI"
+                className="w-12 h-12 rounded-2xl object-cover shadow-md border border-white/20 flex-none"
+              />
+              <div className="min-w-0 flex-1">
+                <h3 className="font-bold text-lg text-[var(--ink)]">Fuqaro AI ilovasini o'rnatish</h3>
+                <p className="text-xs text-[var(--muted)]">Telefonda tezkor va mustaqil ishlash uchun</p>
+              </div>
+              <button
+                onClick={() => setShowInstallModal(false)}
+                className="p-2 rounded-xl text-[var(--muted)] hover:text-[var(--ink)] hover:bg-[var(--bg-subtle)] transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Platform specific instructions */}
+            {isIosDevice ? (
+              <div className="space-y-3.5">
+                <p className="text-xs font-semibold text-[var(--accent)] uppercase tracking-wider">
+                  iPhone (Safari) uchun qo'llanma:
+                </p>
+                <div className="space-y-2.5 text-xs text-[var(--ink)]">
+                  <div className="flex items-start gap-3 p-2.5 rounded-xl bg-[var(--bg-subtle)] border border-[var(--line)]">
+                    <span className="w-6 h-6 rounded-lg bg-[var(--accent)] text-white font-bold flex items-center justify-center flex-none">
+                      1
+                    </span>
+                    <p className="leading-relaxed pt-0.5">
+                      Safari brauzerining pastidagi <strong>«Ulashish»</strong> (kvadrat ichidagi ⬆️ strelka) tugmasini bosing.
+                    </p>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-2.5 rounded-xl bg-[var(--bg-subtle)] border border-[var(--line)]">
+                    <span className="w-6 h-6 rounded-lg bg-[var(--accent)] text-white font-bold flex items-center justify-center flex-none">
+                      2
+                    </span>
+                    <p className="leading-relaxed pt-0.5">
+                      Ochilgan menudan pastroqqa tushib, <strong>«Ekran «Domoy»ga qo'shish»</strong> (<em>Add to Home Screen</em> ➕) ni tanlang.
+                    </p>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-2.5 rounded-xl bg-[var(--bg-subtle)] border border-[var(--line)]">
+                    <span className="w-6 h-6 rounded-lg bg-[var(--accent)] text-white font-bold flex items-center justify-center flex-none">
+                      3
+                    </span>
+                    <p className="leading-relaxed pt-0.5">
+                      Yuqori o'ng burchakdagi <strong>«Qo'shish»</strong> (<em>Add</em>) tugmasini bosing. Ilova ishchi stolingizga tushadi!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-3.5">
+                <p className="text-xs font-semibold text-[var(--accent)] uppercase tracking-wider">
+                  Android va Kompyuter uchun:
+                </p>
+                <div className="space-y-2.5 text-xs text-[var(--ink)]">
+                  <div className="flex items-start gap-3 p-2.5 rounded-xl bg-[var(--bg-subtle)] border border-[var(--line)]">
+                    <span className="w-6 h-6 rounded-lg bg-[var(--accent)] text-white font-bold flex items-center justify-center flex-none">
+                      1
+                    </span>
+                    <p className="leading-relaxed pt-0.5">
+                      Brauzeringizning yuqori o'ng burchagidagi uchta nuqta (<strong>⋮</strong>) menyusini bosing.
+                    </p>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-2.5 rounded-xl bg-[var(--bg-subtle)] border border-[var(--line)]">
+                    <span className="w-6 h-6 rounded-lg bg-[var(--accent)] text-white font-bold flex items-center justify-center flex-none">
+                      2
+                    </span>
+                    <p className="leading-relaxed pt-0.5">
+                      Menyudan <strong>«Ilovani o'rnatish»</strong> (<em>Install App</em>) yoki <strong>«Bosh ekranga qo'shish»</strong> tugmasini bosing.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Close Button */}
+            <button
+              onClick={() => setShowInstallModal(false)}
+              className="btn-pro btn-primary-pro w-full py-3 text-sm font-bold shadow-md"
+            >
+              Tushunarli, rahmat!
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
