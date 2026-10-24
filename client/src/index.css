@@ -83,17 +83,9 @@
 }
 
 html, body {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Locks outer body on mobile to prevent status bar blur & scrolling off */
-}
-
-@media (min-width: 768px) {
-  html, body {
-    height: auto;
-    overflow: auto; /* Natural scrolling on desktop */
-  }
 }
 
 body {
@@ -103,6 +95,16 @@ body {
   font-size: 15px;
   line-height: 1.5;
   transition: background-color 0.2s ease, color 0.2s ease;
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(5, 150, 105, 0.04) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(13, 148, 136, 0.03) 0px, transparent 50%);
+  background-attachment: fixed;
+}
+
+:root[data-theme="dark"] body {
+  background-image: 
+    radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.06) 0px, transparent 60%),
+    radial-gradient(at 0% 100%, rgba(5, 150, 105, 0.04) 0px, transparent 60%);
 }
 
 h1, h2, h3, h4 {
@@ -128,15 +130,13 @@ button {
 
 /* Responsive App Container */
 .app {
-  height: 100%;
-  height: 100dvh;
+  min-height: 100vh;
   width: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   background: var(--bg);
   position: relative;
-  overflow: hidden;
 }
 
 /* Mobile: max 480px */
@@ -150,12 +150,10 @@ button {
 /* Desktop & Tablet: Expands gracefully */
 @media (min-width: 768px) {
   .app {
-    height: auto;
-    min-height: 100vh;
     max-width: 1080px;
     border-inline: 1px solid var(--line);
+    min-height: 100vh;
     box-shadow: 0 10px 40px -15px rgba(0, 0, 0, 0.07);
-    overflow: visible;
   }
 }
 
@@ -177,28 +175,41 @@ button {
   }
 }
 
-/* Top bar with 100% Solid Emerald Gradient - Zero Blur, Permanent Pinning */
+/* Top bar with prestigious Emerald Gradient */
 .bar {
   background: #064e3b;
   background: linear-gradient(135deg, #064e3b 0%, #047857 55%, #0d9488 100%);
   color: #ffffff;
-  padding-top: max(calc(env(safe-area-inset-top, 0px) + 14px), 54px);
-  padding-bottom: 12px;
+  padding-top: 14px;
+  padding-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 12px;
   flex: none;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  position: relative;
-  z-index: 30;
+  box-shadow: 0 4px 20px -3px rgba(6, 78, 59, 0.35);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+/* Standalone App Mode (Only when installed on iPhone / Android Home Screen as PWA) */
+@media (display-mode: standalone) {
+  .bar {
+    padding-top: max(calc(env(safe-area-inset-top, 0px) + 14px), 52px);
+    padding-bottom: 12px;
+  }
+}
+
+.is-standalone .bar {
+  padding-top: max(calc(env(safe-area-inset-top, 0px) + 14px), 52px);
+  padding-bottom: 12px;
 }
 
 @media (min-width: 768px) {
-  .bar {
+  .bar,
+  .is-standalone .bar {
     padding-top: 14px;
     padding-bottom: 14px;
-    position: sticky;
-    top: 0;
   }
 }
 
@@ -281,11 +292,7 @@ button {
 /* Main Content Area */
 main.main-content {
   flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
   padding-block: 16px 28px;
-  -webkit-overflow-scrolling: touch;
 }
 
 @media (min-width: 768px) {

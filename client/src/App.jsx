@@ -431,7 +431,7 @@ export default function App() {
   const stepTitles = ["Fuqaro ma'lumotlari", "Ijtimoiy holati", "Murojaat va maqsad"];
 
   return (
-    <div className="app" id="app">
+    <div className={`app ${isInstalled ? "is-standalone" : ""}`} id="app">
       {/* Top Bar with Responsive Desktop Navigation */}
       <header className="bar pad">
         <div className="flex items-center gap-3">

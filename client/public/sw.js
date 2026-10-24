@@ -1,5 +1,5 @@
-// Fuqaro AI Service Worker v5
-const CACHE_NAME = "fuqaro-ai-v5";
+// Fuqaro AI Service Worker v6
+const CACHE_NAME = "fuqaro-ai-v6";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();
