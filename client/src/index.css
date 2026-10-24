@@ -175,18 +175,20 @@ button {
   }
 }
 
-/* Top bar with prestigious Emerald Gradient */
+/* Top bar with prestigious Emerald Gradient & iOS Safe Area Support */
 .bar {
   background: linear-gradient(135deg, #064e3b 0%, #047857 55%, #0d9488 100%);
   color: #ffffff;
-  padding-block: 14px;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+  padding-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 12px;
   flex: none;
   box-shadow: 0 4px 20px -3px rgba(6, 78, 59, 0.35);
-  position: relative;
-  z-index: 10;
+  position: sticky;
+  top: 0;
+  z-index: 40;
 }
 
 :root[data-theme="dark"] .bar {
@@ -755,16 +757,17 @@ fieldset.fset-pro legend {
   text-overflow: ellipsis;
 }
 
-/* Bottom Tab Navigation Dock - Mobile only */
+/* Bottom Tab Navigation Dock - Mobile only & iOS Safe Area Support */
 .tabs-dock {
   flex: none;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   background: var(--surface);
   border-top: 1px solid var(--line);
-  padding-bottom: max(6px, env(safe-area-inset-bottom, 0px));
-  position: relative;
-  z-index: 20;
+  padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+  position: sticky;
+  bottom: 0;
+  z-index: 40;
 }
 
 .tabs-dock button {
