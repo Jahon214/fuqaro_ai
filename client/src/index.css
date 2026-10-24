@@ -179,7 +179,7 @@ button {
 .bar {
   background: linear-gradient(135deg, #064e3b 0%, #047857 55%, #0d9488 100%);
   color: #ffffff;
-  padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+  padding-top: max(calc(env(safe-area-inset-top, 0px) + 24px), 66px);
   padding-bottom: 14px;
   display: flex;
   align-items: center;
@@ -189,6 +189,13 @@ button {
   position: sticky;
   top: 0;
   z-index: 40;
+}
+
+@media (min-width: 768px) {
+  .bar {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
 }
 
 :root[data-theme="dark"] .bar {
